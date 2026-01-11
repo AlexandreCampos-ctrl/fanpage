@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimePro | Explore o Universo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700&display=swap');
+
+        :root {
+            --primary: #F47521; 
+            --bg: #050505;
+            --surface: #121212;
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* TELA INICIAL (LANDING PAGE) */
+        #landing-page {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), 
+                        url('https://images.alphacoders.com/605/605592.jpg') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: fixed;
+            z-index: 5000;
+            transition: 0.8s ease-in-out;
+        }
+
+        #landing-page h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 5rem;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(244, 117, 33, 0.5);
+        }
+
+        #landing-page p { font-size: 1.5rem; margin-bottom: 30px; color: #ccc; }
+
+        .btn-enter {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            background: var(--primary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-enter:hover { transform: scale(1.1); box-shadow: 0 0 30px var(--primary); }
+
+        /* INTERFACE PRINCIPAL (ESCONDIDA INICIALMENTE) */
+        #main-site { display: none; }
+
+        header {
+            padding: 15px 5%;
+            background: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .logo { font-family: 'Oswald', sans-serif; font-size: 30px; color: var(--primary); cursor: pointer; }
+        .logo span { color: white; }
+
+        .tabs { display: flex; justify-content: center; background: #111; padding: 10px; gap: 20px; }
+        .tabs button { 
+            background: none; border: none; color: #888; cursor: pointer; 
+            font-family: 'Oswald', sans-serif; font-size: 16px; 
+        }
+        .tabs button.active { color: var(--primary); }
+
+        .grid {
+            display: grid; padding: 20px 5%;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border: 1px solid var(--primary); }
+        .card img { width: 100%; height: 240px; object-fit: cover; border-radius: 5px; }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px;
+        }
+        .modal-content { max-width: 900px; margin: auto; }
+        .video-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .close-btn { float: right; font-size: 40px; color: var(--primary); cursor: pointer; }
+
+        .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .ep-btn { background: #333; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 3px; }
+        .ep-btn:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<div id="landing-page">
+    <h1>ANIMEPRO</h1>
+    <p>O melhor catálogo de Animes, Mangás e Manhwas em um só lugar.</p>
+    <button class="btn-enter" onclick="entrarNoSite()">Entrar no Universo</button>
+</div>
+
+<div id="main-site">
+    <header>
+        <div class="logo">ANIME<span>PRO</span></div>
+    </header>
+
+    <div class="tabs">
+        <button id="btn-anime" class="active" onclick="mudarAba('anime')">ANIMES</button>
+        <button id="btn-manga" onclick="mudarAba('manga')">MANGÁS</button>
+        <button id="btn-manhwa" onclick="mudarAba('manhwa')">MANHWAS</button>
+    </div>
+
+    <div class="grid" id="mainGrid"></div>
+</div>
+
+<div id="playerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="fecharModal()">&times;</span>
+        <h2 id="mTitle" style="margin-bottom: 20px;">Título</h2>
+        <div class="video-wrapper">
+            <iframe id="mainPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <div class="ep-grid" id="epGrid"></div>
+    </div>
+</div>
+
+<script>
+    // FUNÇÃO PARA ENTRAR NO SITE
+    function entrarNoSite() {
+        document.getElementById('landing-page').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('main-site').style.display = 'block';
+            loadContent('anime');
+        }, 800);
+    }
+
+    async function loadContent(type) {
+        const grid = document.getElementById('mainGrid');
+        grid.innerHTML = "Carregando...";
+        
+        let url = `https://api.jikan.moe/v4/top/${type === 'anime' ? 'anime' : 'manga'}`;
+        if(type === 'manhwa') url = `https://api.jikan.moe/v4/manga?q=manhwa&order_by=score&sort=desc`;
+
+        try {
+            const resp = await fetch(url);
+            const res = await resp.json();
+            render(res.data);
+        } catch (e) { grid.innerHTML = "Erro ao carregar."; }
+    }
+
+    function render(list) {
+        const grid = document.getElementById('mainGrid');
+        grid.innerHTML = list.map(item => `
+            <div class="card" onclick='abrirModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                <img src="${item.images.jpg.image_url}">
+                <p style="padding:10px; font-size:12px; text-align:center">${item.title}</p>
+            </div>
+        `).join('');
+    }
+
+    function abrirModal(item) {
+        document.getElementById('mTitle').innerText = item.title;
+        // SOLUÇÃO PARA O ERRO DO YOUTUBE: 
+        // Se o trailer estiver disponível, usamos ele. 
+        // Se der erro de configuração, é por causa do acesso local (file://).
+        let videoUrl = item.trailer?.embed_url || "";
+        if (videoUrl) {
+            // Adicionamos parâmetros para tentar forçar o carregamento
+            videoUrl += "?enablejsapi=1&origin=" + window.location.origin;
+        }
+        
+        document.getElementById('mainPlayer').src = videoUrl;
+
+        const epGrid = document.getElementById('epGrid');
+        epGrid.innerHTML = "";
+        const total = item.episodes || 12;
+        for(let i=1; i<=total; i++) {
+            epGrid.innerHTML += `<button class="ep-btn" onclick="alert('Buscando episódio ${i}...')">EP ${i}</button>`;
+        }
+        document.getElementById('playerModal').style.display = 'flex';
+    }
+
+    function fecharModal() {
+        document.getElementById('playerModal').style.display = 'none';
+        document.getElementById('mainPlayer').src = "";
+    }
+
+    function mudarAba(type) {
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + type).classList.add('active');
+        loadContent(type);
+    }
+</script>
+</body>
+</html>
