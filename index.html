@@ -3,200 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimePro | Explore o Universo</title>
+    <title>AnimePro - Catálogo Master</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700&display=swap');
-
-        :root {
-            --primary: #F47521; 
-            --bg: #050505;
-            --surface: #121212;
-            --text: #ffffff;
-        }
-
+        :root { --primary: #F47521; --bg: #050505; --surface: #121212; --text: #fff; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); }
 
-        /* TELA INICIAL (LANDING PAGE) */
-        #landing-page {
-            height: 100vh;
-            width: 100%;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), 
-                        url('https://images.alphacoders.com/605/605592.jpg') no-repeat center center/cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: fixed;
-            z-index: 5000;
-            transition: 0.8s ease-in-out;
-        }
+        /* HEADER & BUSCA */
+        header { padding: 15px 5%; background: #000; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); sticky; top: 0; z-index: 1000; }
+        .logo { font-family: 'Oswald', sans-serif; font-size: 28px; color: var(--primary); cursor: pointer; }
+        .search-container { display: flex; gap: 10px; width: 100%; max-width: 400px; margin: 10px 0; }
+        .search-container input { flex: 1; padding: 8px; border-radius: 5px; border: none; background: #222; color: white; }
 
-        #landing-page h1 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 5rem;
-            color: var(--primary);
-            text-shadow: 0 0 20px rgba(244, 117, 33, 0.5);
-        }
+        /* ALFABETO */
+        .alphabet { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; padding: 10px; background: #111; }
+        .alphabet button { background: #222; border: none; color: white; padding: 5px 10px; cursor: pointer; border-radius: 3px; font-size: 12px; }
+        .alphabet button:hover { background: var(--primary); }
 
-        #landing-page p { font-size: 1.5rem; margin-bottom: 30px; color: #ccc; }
+        /* TABS */
+        .tabs { display: flex; justify-content: center; background: #1a1a1a; padding: 10px; gap: 15px; }
+        .tabs button { background: none; border: none; color: #888; cursor: pointer; font-family: 'Oswald', sans-serif; font-size: 18px; }
+        .tabs button.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-        .btn-enter {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
-            background: var(--primary);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn-enter:hover { transform: scale(1.1); box-shadow: 0 0 30px var(--primary); }
-
-        /* INTERFACE PRINCIPAL (ESCONDIDA INICIALMENTE) */
-        #main-site { display: none; }
-
-        header {
-            padding: 15px 5%;
-            background: #000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0; z-index: 1000;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .logo { font-family: 'Oswald', sans-serif; font-size: 30px; color: var(--primary); cursor: pointer; }
-        .logo span { color: white; }
-
-        .tabs { display: flex; justify-content: center; background: #111; padding: 10px; gap: 20px; }
-        .tabs button { 
-            background: none; border: none; color: #888; cursor: pointer; 
-            font-family: 'Oswald', sans-serif; font-size: 16px; 
-        }
-        .tabs button.active { color: var(--primary); }
-
-        .grid {
-            display: grid; padding: 20px 5%;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--surface);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); border: 1px solid var(--primary); }
-        .card img { width: 100%; height: 240px; object-fit: cover; border-radius: 5px; }
+        /* GRID */
+        .grid { display: grid; padding: 20px 5%; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .card { background: var(--surface); border-radius: 5px; cursor: pointer; transition: 0.3s; position: relative; }
+        .card:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--primary); }
+        .card img { width: 100%; height: 220px; object-fit: cover; border-radius: 5px; }
+        .card-title { padding: 8px; font-size: 12px; text-align: center; height: 45px; overflow: hidden; }
 
         /* MODAL */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px; overflow-y: auto; }
         .modal-content { max-width: 900px; margin: auto; }
         .video-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
-        .close-btn { float: right; font-size: 40px; color: var(--primary); cursor: pointer; }
-
-        .ep-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-        .ep-btn { background: #333; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 3px; }
-        .ep-btn:hover { background: var(--primary); }
+        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 10px; margin-top: 20px; }
+        .ep-btn { background: #333; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 3px; }
+        .close-btn { float: right; font-size: 35px; color: var(--primary); cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="landing-page">
-    <h1>ANIMEPRO</h1>
-    <p>O melhor catálogo de Animes, Mangás e Manhwas em um só lugar.</p>
-    <button class="btn-enter" onclick="entrarNoSite()">Entrar no Universo</button>
+<header>
+    <div class="logo" onclick="window.location.reload()">ANIME<span>PRO</span></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar no catálogo..." oninput="debounceSearch()">
+    </div>
+</header>
+
+<div class="tabs">
+    <button id="btn-anime" class="active" onclick="mudarAba('anime')">ANIMES</button>
+    <button id="btn-manga" onclick="mudarAba('manga')">MANGÁS</button>
+    <button id="btn-manhwa" onclick="mudarAba('manhwa')">MANHWAS</button>
 </div>
 
-<div id="main-site">
-    <header>
-        <div class="logo">ANIME<span>PRO</span></div>
-    </header>
+<div class="alphabet" id="alphabetBox"></div>
 
-    <div class="tabs">
-        <button id="btn-anime" class="active" onclick="mudarAba('anime')">ANIMES</button>
-        <button id="btn-manga" onclick="mudarAba('manga')">MANGÁS</button>
-        <button id="btn-manhwa" onclick="mudarAba('manhwa')">MANHWAS</button>
-    </div>
-
+<div class="container">
+    <div id="status" style="text-align:center; padding: 20px;">Carregando...</div>
     <div class="grid" id="mainGrid"></div>
 </div>
 
 <div id="playerModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="fecharModal()">&times;</span>
-        <h2 id="mTitle" style="margin-bottom: 20px;">Título</h2>
-        <div class="video-wrapper">
-            <iframe id="mainPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+        <h2 id="mTitle">Título</h2>
+        <div class="video-wrapper"><iframe id="mainPlayer" src="" allowfullscreen></iframe></div>
         <div class="ep-grid" id="epGrid"></div>
     </div>
 </div>
 
 <script>
-    // FUNÇÃO PARA ENTRAR NO SITE
-    function entrarNoSite() {
-        document.getElementById('landing-page').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('landing-page').style.display = 'none';
-            document.getElementById('main-site').style.display = 'block';
-            loadContent('anime');
-        }, 800);
+    let tipoAtual = 'anime';
+    let timeoutBusca;
+
+    // Criar Barra de Alfabeto
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const alphabetBox = document.getElementById('alphabetBox');
+    alphabetBox.innerHTML += `<button onclick="carregarPorLetra('')">TUDO</button>`;
+    alphabet.forEach(letra => {
+        alphabetBox.innerHTML += `<button onclick="carregarPorLetra('${letra}')">${letra}</button>`;
+    });
+
+    // Função para mudar abas
+    function mudarAba(tipo) {
+        tipoAtual = tipo;
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + tipo).classList.add('active');
+        carregarDados();
     }
 
-    async function loadContent(type) {
+    // Carregar dados da API
+    async function carregarDados(query = '', letra = '') {
         const grid = document.getElementById('mainGrid');
-        grid.innerHTML = "Carregando...";
+        const status = document.getElementById('status');
+        status.innerText = "Buscando no banco de dados...";
+        grid.innerHTML = "";
+
+        let url = `https://api.jikan.moe/v4/${tipoAtual === 'anime' ? 'anime' : 'manga'}?order_by=score&sort=desc&limit=24`;
         
-        let url = `https://api.jikan.moe/v4/top/${type === 'anime' ? 'anime' : 'manga'}`;
-        if(type === 'manhwa') url = `https://api.jikan.moe/v4/manga?q=manhwa&order_by=score&sort=desc`;
+        if (query) url += `&q=${query}`;
+        if (letra) url += `&letter=${letra}`;
+        if (tipoAtual === 'manhwa') url = `https://api.jikan.moe/v4/manga?q=manhwa&order_by=score&sort=desc&limit=24${letra ? '&letter='+letra : ''}`;
 
         try {
             const resp = await fetch(url);
-            const res = await resp.json();
-            render(res.data);
-        } catch (e) { grid.innerHTML = "Erro ao carregar."; }
+            const data = await resp.json();
+            if (data.data.length === 0) {
+                status.innerText = "Nenhum resultado encontrado.";
+            } else {
+                status.innerText = "";
+                render(data.data);
+            }
+        } catch (e) {
+            status.innerText = "Erro ao conectar com o servidor.";
+        }
     }
 
-    function render(list) {
+    function render(lista) {
         const grid = document.getElementById('mainGrid');
-        grid.innerHTML = list.map(item => `
+        grid.innerHTML = lista.map(item => `
             <div class="card" onclick='abrirModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-                <img src="${item.images.jpg.image_url}">
-                <p style="padding:10px; font-size:12px; text-align:center">${item.title}</p>
+                <img src="${item.images.jpg.image_url}" alt="${item.title}">
+                <div class="card-title">${item.title_english || item.title}</div>
             </div>
         `).join('');
     }
 
+    function debounceSearch() {
+        clearTimeout(timeoutBusca);
+        timeoutBusca = setTimeout(() => {
+            const q = document.getElementById('searchInput').value;
+            carregarDados(q);
+        }, 800);
+    }
+
+    function carregarPorLetra(l) {
+        carregarDados('', l);
+    }
+
     function abrirModal(item) {
         document.getElementById('mTitle').innerText = item.title;
-        // SOLUÇÃO PARA O ERRO DO YOUTUBE: 
-        // Se o trailer estiver disponível, usamos ele. 
-        // Se der erro de configuração, é por causa do acesso local (file://).
-        let videoUrl = item.trailer?.embed_url || "";
-        if (videoUrl) {
-            // Adicionamos parâmetros para tentar forçar o carregamento
-            videoUrl += "?enablejsapi=1&origin=" + window.location.origin;
-        }
+        document.getElementById('mainPlayer').src = item.trailer?.embed_url || "";
         
-        document.getElementById('mainPlayer').src = videoUrl;
-
         const epGrid = document.getElementById('epGrid');
         epGrid.innerHTML = "";
-        const total = item.episodes || 12;
+        const total = item.episodes || item.chapters || 12;
+        
         for(let i=1; i<=total; i++) {
-            epGrid.innerHTML += `<button class="ep-btn" onclick="alert('Buscando episódio ${i}...')">EP ${i}</button>`;
+            epGrid.innerHTML += `<button class="ep-btn" onclick="alert('Funcionalidade de vídeo real requer servidor de streaming privado.')">${i}</button>`;
         }
         document.getElementById('playerModal').style.display = 'flex';
     }
@@ -206,11 +162,8 @@
         document.getElementById('mainPlayer').src = "";
     }
 
-    function mudarAba(type) {
-        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-' + type).classList.add('active');
-        loadContent(type);
-    }
+    // Iniciar
+    carregarDados();
 </script>
 </body>
 </html>
