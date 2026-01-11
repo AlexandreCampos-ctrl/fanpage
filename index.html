@@ -3,121 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimePro v1.5 | Premium Player</title>
+    <title>AnimePro v1.6 | HUB Principal</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700&display=swap');
         :root { --primary: #F47521; --bg: #050505; --surface: #121212; --text: #fff; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* HEADER & CATEGORIAS */
-        header { padding: 15px 5%; background: #000; display: flex; justify-content: space-between; align-items: center; sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary); }
-        .categories { background: #111; padding: 10px 5%; overflow-x: auto; white-space: nowrap; display: flex; gap: 15px; border-bottom: 1px solid #333; }
-        .categories button { background: none; border: 1px solid #444; color: #ccc; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 13px; }
-        .categories button:hover { border-color: var(--primary); color: var(--primary); }
+        /* TELA DE ESCOLHA INICIAL */
+        #choice-screen {
+            height: 100vh; width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+            url('https://wallpaperaccess.com/full/19965.jpg') center/cover;
+            position: fixed; z-index: 9999; transition: 0.5s;
+        }
+        .choice-container { display: flex; gap: 30px; margin-top: 30px; }
+        .choice-card {
+            width: 250px; height: 350px; background: rgba(255,255,255,0.1);
+            border: 2px solid var(--primary); border-radius: 15px; display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        .choice-card:hover { transform: scale(1.1); background: var(--primary); }
+        .choice-card h2 { font-family: 'Oswald'; font-size: 2rem; margin-top: 15px; }
 
-        /* GRID */
+        /* INTERFACE PRINCIPAL (ESCONDIDA) */
+        #main-interface { display: none; }
+
+        header { padding: 15px 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
+        .categories { background: #111; padding: 10px 5%; display: flex; gap: 10px; overflow-x: auto; }
+        .categories button { background: #222; border: 1px solid #444; color: #fff; padding: 5px 15px; border-radius: 15px; cursor: pointer; }
+
         .grid { display: grid; padding: 20px 5%; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-        .card { background: var(--surface); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid #222; }
-        .card:hover { transform: scale(1.05); border-color: var(--primary); }
+        .card { background: var(--surface); border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid #222; }
         .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-info { padding: 10px; text-align: center; font-size: 13px; font-weight: bold; }
 
-        /* MODAL E PLAYER MENOR */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; padding: 20px; overflow-y: auto; }
-        .modal-content { max-width: 800px; margin: auto; background: #111; padding: 20px; border-radius: 10px; border: 1px solid #333; }
-        
-        .player-area { background: #000; width: 100%; max-width: 600px; margin: 0 auto; aspect-ratio: 16/9; border: 1px solid var(--primary); display: none; }
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px; }
+        .modal-content { max-width: 800px; margin: auto; background: #111; padding: 20px; border-radius: 10px; }
+        .player-area { width: 100%; aspect-ratio: 16/9; background: #000; margin-top: 15px; border: 1px solid var(--primary); }
         iframe { width: 100%; height: 100%; border: none; }
-
-        .controls { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .selectors { display: flex; gap: 10px; flex-wrap: wrap; }
-        select { background: #222; color: white; border: 1px solid #444; padding: 10px; border-radius: 5px; flex: 1; min-width: 150px; }
         
-        .btn-external { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; text-align: center; text-decoration: none; display: block; margin-top: 10px; }
-
-        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; margin-top: 15px; max-height: 200px; overflow-y: auto; padding: 5px; }
-        .ep-item { background: #333; padding: 10px; text-align: center; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .ep-item:hover { background: var(--primary); }
-        .close { float: right; font-size: 30px; color: var(--primary); cursor: pointer; }
+        .btn-aba { display: block; width: 100%; padding: 12px; background: var(--primary); color: #fff; text-align: center; text-decoration: none; font-weight: bold; border-radius: 5px; margin-top: 10px; }
+        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; margin-top: 15px; max-height: 150px; overflow-y: auto; }
+        .ep-item { background: #333; padding: 10px; text-align: center; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">ANIME<span>PRO</span></div>
-    <input type="text" id="searchInput" placeholder="Buscar..." oninput="debounceSearch()" style="padding:8px; border-radius:5px; border:none; background:#222; color:white; width:200px;">
-</header>
-
-<div class="categories">
-    <button onclick="loadByGenre(1)">Ação</button>
-    <button onclick="loadByGenre(2)">Aventura</button>
-    <button onclick="loadByGenre(4)">Comédia</button>
-    <button onclick="loadByGenre(8)">Drama</button>
-    <button onclick="loadByGenre(10)">Fantasia</button>
-    <button onclick="loadByGenre(22)">Romance</button>
-    <button onclick="loadByGenre(24)">Sci-Fi</button>
-    <button onclick="loadByGenre(27)">Shounen</button>
+<div id="choice-screen">
+    <h1 style="font-family:'Oswald'; font-size: 3rem;">O QUE VAMOS FAZER HOJE?</h1>
+    <div class="choice-container">
+        <div class="choice-card" onclick="entrar('anime')">
+            <span style="font-size: 4rem;">📺</span>
+            <h2>ASSISTIR</h2>
+        </div>
+        <div class="choice-card" onclick="entrar('manga')">
+            <span style="font-size: 4rem;">📖</span>
+            <h2>LER</h2>
+        </div>
+    </div>
 </div>
 
-<div class="grid" id="mainGrid"></div>
+<div id="main-interface">
+    <header>
+        <div class="logo" onclick="location.reload()">ANIME<span>PRO</span></div>
+        <input type="text" id="searchInput" placeholder="Buscar..." oninput="debounceSearch()" style="padding:8px; background:#222; color:#fff; border:none; border-radius:5px;">
+    </header>
+
+    <div class="categories" id="catBar">
+        </div>
+
+    <div class="grid" id="mainGrid"></div>
+</div>
 
 <div id="mainModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">Título do Anime</h2>
+        <span style="float:right; cursor:pointer; font-size:30px; color:var(--primary);" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Título</h2>
         
-        <div class="controls">
-            <div class="selectors">
-                <select id="seasonSelect">
-                    <option value="1">1ª Temporada</option>
-                    <option value="2">2ª Temporada</option>
-                    <option value="3">3ª Temporada</option>
-                </select>
-                <select id="langSelect">
-                    <option value="legendado">Legendado</option>
-                    <option value="dublado">Dublado</option>
-                </select>
-            </div>
-            
-            <a id="btnNovaAba" href="#" target="_blank" class="btn-external">ASSISTIR EM NOVA ABA (TELA CHEIA)</a>
-            <p style="font-size: 11px; color: #888; text-align: center;">Ou assista abaixo no player reduzido:</p>
-            
-            <div class="player-area" id="playerArea">
-                <iframe id="miniPlayer" src="" allowfullscreen></iframe>
-            </div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <select id="seasonSelect" style="flex:1; padding:10px; background:#222; color:#fff;">
+                <option value="1">1ª Temporada</option>
+                <option value="2">2ª Temporada</option>
+            </select>
+            <select id="langSelect" style="flex:1; padding:10px; background:#222; color:#fff;">
+                <option value="legendado">Legendado</option>
+                <option value="dublado">Dublado</option>
+            </select>
         </div>
 
+        <div class="player-area" id="pArea" style="display:none;">
+            <iframe id="mainPlayer" src="" allowfullscreen></iframe>
+        </div>
+
+        <a id="linkNovaAba" href="#" target="_blank" class="btn-aba">ABRIR EM NOVA ABA (TELA CHEIA)</a>
+        
         <div class="ep-grid" id="epGrid"></div>
     </div>
 </div>
 
 <script>
+    let mode = 'anime';
     let currentItem = null;
-    let searchTimeout;
 
-    async function loadData(url = 'https://api.jikan.moe/v4/top/anime?limit=24') {
+    function entrar(tipo) {
+        mode = tipo;
+        document.getElementById('choice-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('choice-screen').style.display = 'none';
+            document.getElementById('main-interface').style.display = 'block';
+            loadData();
+        }, 500);
+    }
+
+    async function loadData(query = '') {
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = "Carregando...";
-        try {
-            const resp = await fetch(url);
-            const data = await resp.json();
-            render(data.data);
-        } catch (e) { grid.innerHTML = "Erro ao carregar."; }
-    }
-
-    function render(items) {
-        const grid = document.getElementById('mainGrid');
-        grid.innerHTML = items.map(item => `
+        let url = `https://api.jikan.moe/v4/${mode === 'anime' ? 'anime' : 'manga'}?order_by=popularity&limit=24`;
+        if(query) url += `&q=${query}`;
+        
+        const resp = await fetch(url);
+        const data = await resp.json();
+        grid.innerHTML = data.data.map(item => `
             <div class="card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
                 <img src="${item.images.jpg.image_url}">
-                <div class="card-info">${item.title}</div>
+                <div style="padding:10px; text-align:center; font-size:12px;">${item.title}</div>
             </div>
         `).join('');
-    }
-
-    function loadByGenre(id) {
-        loadData(`https://api.jikan.moe/v4/anime?genres=${id}&order_by=popularity&limit=24`);
     }
 
     function openModal(item) {
@@ -127,54 +140,47 @@
         
         const epGrid = document.getElementById('epGrid');
         epGrid.innerHTML = "";
-        const total = item.episodes || 12;
+        const total = mode === 'anime' ? (item.episodes || 12) : (item.chapters || 30);
 
         for(let i=1; i<=total; i++) {
             const div = document.createElement('div');
             div.className = 'ep-item';
             div.innerText = i;
-            div.onclick = () => prepareVideo(i);
+            div.onclick = () => playContent(i);
             epGrid.appendChild(div);
         }
     }
 
-    function prepareVideo(ep) {
-        const season = document.getElementById('seasonSelect').value;
+    function playContent(num) {
         const lang = document.getElementById('langSelect').value;
         const id = currentItem.mal_id;
         
-        // Lógica Paliativa de URL (Sem YouTube)
-        // Montamos a URL baseada no ID para o servidor de animes
-        let finalUrl = `https://embedder.net/e/anime/${id}/${ep}`;
-        if(lang === 'dublado') finalUrl = `https://embedder.net/e/anime/${id}-dublado/${ep}`;
+        // URL Corrigida para evitar erro de aba
+        let finalUrl = mode === 'anime' 
+            ? `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`
+            : `https://manganato.com/search/story/${currentItem.title.replace(/\s+/g, '_')}`;
 
-        // Opção 1: Player Menor
-        const playerArea = document.getElementById('playerArea');
-        playerArea.style.display = 'block';
-        document.getElementById('miniPlayer').src = finalUrl;
-
-        // Opção 2: Nova Aba
-        const btnAba = document.getElementById('btnNovaAba');
-        btnAba.href = finalUrl;
+        // Player interno
+        document.getElementById('pArea').style.display = 'block';
+        document.getElementById('mainPlayer').src = mode === 'anime' ? finalUrl : "";
         
-        alert(`Episódio ${ep} preparado! Você pode assistir abaixo ou clicar no botão laranja para abrir em outra aba.`);
+        // Link Nova Aba (Ajustado para funcionar)
+        const linkAba = document.getElementById('linkNovaAba');
+        linkAba.href = finalUrl;
+        linkAba.innerText = mode === 'anime' ? "ASSISTIR EM NOVA ABA" : "LER EM NOVA ABA";
     }
 
     function closeModal() {
         document.getElementById('mainModal').style.display = 'none';
-        document.getElementById('miniPlayer').src = "";
-        document.getElementById('playerArea').style.display = 'none';
+        document.getElementById('mainPlayer').src = "";
     }
 
     function debounceSearch() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const q = document.getElementById('searchInput').value;
-            loadData(`https://api.jikan.moe/v4/anime?q=${q}&limit=24`);
+        clearTimeout(window.searchTimer);
+        window.searchTimer = setTimeout(() => {
+            loadData(document.getElementById('searchInput').value);
         }, 800);
     }
-
-    loadData();
 </script>
 </body>
 </html>
