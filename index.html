@@ -3,194 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimePro 2.0 | Experience</title>
+    <title>AnimePro 3.0 | Ultimate Otaku Portal</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto:wght@300;400;700&display=swap');
-        :root { --primary: #F47521; --bg: #0a0a0a; --card: #1a1a1a; --text: #eee; }
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap');
         
+        :root {
+            --accent: #F47521;
+            --bg-dark: #050505;
+            --surface: #121212;
+            --card-bg: #1a1a1a;
+            --text-main: #ffffff;
+            --text-dim: #b3b3b3;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
 
-        /* TELA INICIAL HUB */
-        #hub { height: 100vh; display: flex; justify-content: center; align-items: center; gap: 40px; background: #000; position: fixed; width: 100%; z-index: 9999; transition: 0.8s; }
-        .hub-card { width: 300px; height: 450px; border-radius: 20px; cursor: pointer; position: relative; overflow: hidden; border: 2px solid #333; transition: 0.5s; }
-        .hub-card:hover { border-color: var(--primary); transform: scale(1.05); box-shadow: 0 0 50px rgba(244, 117, 33, 0.3); }
-        .hub-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
-        .hub-card h2 { position: absolute; bottom: 30px; width: 100%; text-align: center; font-family: 'Oswald'; font-size: 2.5rem; }
+        /* NAVEGAÇÃO ESTILO STREAMING */
+        nav {
+            padding: 15px 5%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--accent);
+        }
+        .brand { font-family: 'Oswald', sans-serif; font-size: 2rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
 
-        /* HEADER & FILTROS */
-        header { padding: 20px 5%; background: rgba(0,0,0,0.9); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 100; }
-        .categories { padding: 15px 5%; display: flex; gap: 10px; overflow-x: auto; background: #111; }
-        .categories button { background: #222; border: 1px solid #444; color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 14px; white-space: nowrap; }
-        .categories button:hover { background: var(--primary); border-color: var(--primary); }
+        /* BANNER DE DESTAQUE */
+        .hero {
+            height: 450px;
+            background: linear-gradient(to bottom, transparent, var(--bg-dark)), url('https://images8.alphacoders.com/632/632124.png') center/cover;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 5% 50px;
+        }
+        .hero-content h2 { font-size: 3rem; font-family: 'Oswald'; margin-bottom: 10px; text-shadow: 2px 2px 10px #000; }
 
-        /* GRID PRO */
-        .grid { display: grid; padding: 30px 5%; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-10px); }
-        .card img { width: 100%; height: 260px; object-fit: cover; }
-        .card-title { padding: 15px; font-size: 14px; font-weight: 700; text-align: center; }
+        /* FILTROS E CATEGORIAS */
+        .filter-section { padding: 20px 5%; background: var(--surface); display: flex; gap: 15px; overflow-x: auto; }
+        .filter-btn {
+            background: #222; border: 1px solid #333; color: white;
+            padding: 8px 25px; border-radius: 5px; cursor: pointer;
+            transition: 0.3s; white-space: nowrap; font-weight: 600;
+        }
+        .filter-btn:hover, .filter-btn.active { background: var(--accent); border-color: var(--accent); }
 
-        /* PLAYER & READER MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; }
-        .modal-content { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .close-btn { position: fixed; top: 20px; right: 30px; font-size: 40px; color: var(--primary); cursor: pointer; z-index: 2100; }
-
-        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
+        /* GRID DE CARDS PROFISSIONAL */
+        .main-container { padding: 40px 5%; }
+        .section-title { font-family: 'Oswald'; font-size: 1.8rem; margin-bottom: 25px; border-left: 5px solid var(--accent); padding-left: 15px; }
         
-        /* READER ZEN MODE */
-        #manga-reader { display: none; background: #fff; color: #000; min-height: 100vh; padding: 20px; }
-        #manga-reader img { display: block; margin: 0 auto 20px; max-width: 900px; width: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
 
-        .ep-selector { margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 10px; }
-        .ep-btn { background: #222; border: 1px solid #444; color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; }
-        .ep-btn:hover { background: var(--primary); }
+        .anime-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+            position: relative;
+        }
+        .anime-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .anime-card img { width: 100%; height: 300px; object-fit: cover; transition: 0.5s; }
+        .anime-card:hover img { filter: brightness(0.6); }
 
-        /* COMMENTS */
-        #comments-section { margin-top: 50px; padding-top: 30px; border-top: 1px solid #333; }
+        .anime-meta {
+            padding: 15px;
+            background: linear-gradient(to top, var(--card-bg), transparent);
+        }
+        .anime-meta h3 { font-size: 1rem; font-weight: 600; height: 45px; overflow: hidden; }
+        .score-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: var(--accent); color: #000;
+            padding: 2px 10px; border-radius: 5px; font-weight: bold; font-size: 12px;
+        }
+
+        /* PLAYER MODAL (ESTILO CINEMA) */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000; overflow-y: auto;
+        }
+        .modal-body { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .player-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid #333; box-shadow: 0 0 50px rgba(244,117,33,0.1); }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .ep-list {
+            margin-top: 30px; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 12px;
+        }
+        .ep-box {
+            background: #222; padding: 15px; text-align: center; border-radius: 8px;
+            cursor: pointer; font-weight: bold; transition: 0.3s; border: 1px solid #333;
+        }
+        .ep-box:hover { background: var(--accent); color: #000; transform: scale(1.1); }
+
+        /* LEITOR DE MANGÁ LIMPO */
+        .manga-view { display: none; text-align: center; background: #fff; padding: 20px; }
+        .manga-view img { max-width: 900px; width: 100%; display: block; margin: 0 auto 20px; }
     </style>
 </head>
 <body>
 
-<div id="hub">
-    <div class="hub-card" onclick="startApp('anime')">
-        <img src="https://wallpaperaccess.com/full/19965.jpg">
-        <h2>ASSISTIR ANIMES</h2>
+<nav>
+    <div class="brand" onclick="location.reload()">AnimePro</div>
+    <div style="flex-grow: 1; margin: 0 40px;">
+        <input type="text" id="searchInput" placeholder="O que você quer assistir?" oninput="searchHandler()" 
+               style="width: 100%; max-width: 500px; padding: 10px 20px; border-radius: 5px; border: none; background: #1a1a1a; color: white;">
     </div>
-    <div class="hub-card" onclick="startApp('manga')">
-        <img src="https://images3.alphacoders.com/640/640856.jpg">
-        <h2>LER MANGÁS</h2>
+</nav>
+
+<div id="homePage">
+    <div class="hero">
+        <div class="hero-content">
+            <h2 id="featuredTitle">Solo Leveling: Arise</h2>
+            <p style="color: var(--accent); font-weight: bold; font-size: 1.2rem;">ASSISTA AGORA NA ANIMEPRO</p>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <button class="filter-btn active" onclick="setMode('anime')">Animes</button>
+        <button class="filter-btn" onclick="setMode('manga')">Mangás</button>
+        <button class="filter-btn" onclick="filterGenre(1)">Ação</button>
+        <button class="filter-btn" onclick="filterGenre(10)">Fantasia</button>
+        <button class="filter-btn" onclick="filterGenre(22)">Romance</button>
+        <button class="filter-btn" onclick="filterGenre(27)">Shounen</button>
+    </div>
+
+    <div class="main-container">
+        <h2 class="section-title">Populares do Momento</h2>
+        <div class="anime-grid" id="mainGrid"></div>
     </div>
 </div>
 
-<div id="app" style="display:none;">
-    <header>
-        <h1 onclick="location.reload()" style="font-family:'Oswald'; color:var(--primary); cursor:pointer;">ANIMEPRO</h1>
-        <input type="text" id="search" placeholder="Buscar título..." oninput="searchData()" style="padding:10px; border-radius:25px; border:none; width:300px; background:#222; color:#fff;">
-    </header>
-
-    <div class="categories" id="catBar">
-        <button onclick="loadByGenre(1)">Ação</button>
-        <button onclick="loadByGenre(2)">Aventura</button>
-        <button onclick="loadByGenre(4)">Comédia</button>
-        <button onclick="loadByGenre(10)">Fantasia</button>
-        <button onclick="loadByGenre(22)">Romance</button>
-        <button onclick="loadByGenre(27)">Shounen</button>
-        <button onclick="loadByGenre(37)">Sobrenatural</button>
-    </div>
-
-    <div class="grid" id="contentGrid"></div>
-</div>
-
-<div id="modal" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <div class="modal-content">
-        <h1 id="mTitle" style="font-family:'Oswald'; margin-bottom: 20px;">Título</h1>
+<div id="playerModal" class="modal">
+    <div class="modal-body">
+        <span onclick="closeModal()" style="color: var(--accent); float: right; cursor: pointer; font-size: 40px; margin-top: -50px;">&times;</span>
+        <h2 id="modalName" style="font-family: 'Oswald'; margin-bottom: 20px; font-size: 2.5rem;">Título</h2>
         
-        <div id="video-area" class="video-container">
-            <iframe id="player" src="" allowfullscreen></iframe>
+        <div id="videoContainer" class="player-wrapper">
+            <iframe id="videoIframe" src="" allowfullscreen></iframe>
         </div>
 
-        <div id="manga-reader">
-            </div>
+        <div id="mangaContainer" class="manga-view"></div>
 
-        <div class="ep-selector" id="epSelector"></div>
-
-        <div id="comments-section">
-            <h3 style="margin-bottom:20px;">Opiniões da Comunidade</h3>
-            <div id="disqus_thread"></div>
-        </div>
+        <div class="ep-list" id="epList"></div>
     </div>
 </div>
 
 <script>
-    let currentType = 'anime';
-    let currentItem = null;
+    let currentMode = 'anime';
+    let currentData = null;
 
-    function startApp(type) {
-        currentType = type;
-        document.getElementById('hub').style.transform = 'translateY(-100%)';
-        setTimeout(() => {
-            document.getElementById('hub').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            loadData();
-        }, 800);
-    }
-
-    async function loadData(query = '', genre = '') {
-        const grid = document.getElementById('contentGrid');
-        grid.innerHTML = "<h2>Buscando no acervo...</h2>";
-        let url = `https://api.jikan.moe/v4/${currentType === 'anime' ? 'anime' : 'manga'}?order_by=popularity&limit=24`;
-        if(query) url += `&q=${query}`;
-        if(genre) url += `&genres=${genre}`;
-
+    async function loadContent(url = 'https://api.jikan.moe/v4/top/anime?limit=24') {
+        const grid = document.getElementById('mainGrid');
+        grid.innerHTML = "<p>Sincronizando com o servidor...</p>";
+        
         const resp = await fetch(url);
         const data = await resp.json();
         
         grid.innerHTML = data.data.map(item => `
-            <div class="card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+            <div class="anime-card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                <div class="score-badge">★ ${item.score || 'N/A'}</div>
                 <img src="${item.images.jpg.large_image_url}" loading="lazy">
-                <div class="card-title">${item.title}</div>
+                <div class="anime-meta">
+                    <h3>${item.title}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">${item.type} • ${item.episodes || '?'} Eps</p>
+                </div>
             </div>
         `).join('');
     }
 
-    function loadByGenre(id) { loadData('', id); }
+    function setMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        loadContent(`https://api.jikan.moe/v4/top/${mode}?limit=24`);
+    }
+
+    function filterGenre(id) {
+        loadContent(`https://api.jikan.moe/v4/${currentMode}?genres=${id}&order_by=popularity&limit=24`);
+    }
 
     function openModal(item) {
-        currentItem = item;
-        document.getElementById('mTitle').innerText = item.title;
-        document.getElementById('modal').style.display = 'block';
+        currentData = item;
+        document.getElementById('modalName').innerText = item.title;
+        document.getElementById('playerModal').style.display = 'block';
         
-        const selector = document.getElementById('epSelector');
-        selector.innerHTML = "";
-        const total = currentType === 'anime' ? (item.episodes || 12) : (item.chapters || 40);
+        const list = document.getElementById('epList');
+        list.innerHTML = "";
+        const total = currentMode === 'anime' ? (item.episodes || 12) : (item.chapters || 40);
 
         for(let i=1; i<=total; i++) {
-            selector.innerHTML += `<div class="ep-btn" onclick="launch(${i})">${i}</div>`;
-        }
-
-        // Reset Disqus para o novo anime
-        if (window.DISQUS) {
-            DISQUS.reset({ reload: true, config: function () { this.page.identifier = item.mal_id; this.page.url = window.location.href + "#!" + item.mal_id; } });
+            list.innerHTML += `<div class="ep-box" onclick="play(${i})">${i}</div>`;
         }
     }
 
-    function launch(num) {
-        if(currentType === 'anime') {
-            document.getElementById('video-area').style.display = 'block';
-            document.getElementById('manga-reader').style.display = 'none';
-            // Servidor paliativo inteligente
-            document.getElementById('player').src = `https://embedder.net/e/anime/${currentItem.mal_id}/${num}`;
+    function play(num) {
+        if(currentMode === 'anime') {
+            document.getElementById('videoContainer').style.display = 'block';
+            document.getElementById('mangaContainer').style.display = 'none';
+            // Servidor de Alta Disponibilidade (Embedder)
+            document.getElementById('videoIframe').src = `https://embedder.net/e/anime/${currentData.mal_id}/${num}`;
         } else {
-            document.getElementById('video-area').style.display = 'none';
-            document.getElementById('manga-reader').style.display = 'block';
-            document.getElementById('manga-reader').innerHTML = `
-                <h2 style="text-align:center; padding:20px;">Capítulo ${num}</h2>
-                <img src="https://via.placeholder.com/800x1200.png?text=Pagina+1+de+Leitura">
-                <img src="https://via.placeholder.com/800x1200.png?text=Pagina+2+de+Leitura">
+            document.getElementById('videoContainer').style.display = 'none';
+            document.getElementById('mangaContainer').style.display = 'block';
+            document.getElementById('mangaContainer').innerHTML = `
+                <h3 style="color: #000; padding: 20px;">Capítulo ${num}</h3>
+                <img src="https://via.placeholder.com/800x1200.png?text=Página+Simulada+do+Mangá+${num}">
             `;
-            window.scrollTo(0,0);
         }
     }
 
     function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('player').src = "";
+        document.getElementById('playerModal').style.display = 'none';
+        document.getElementById('videoIframe').src = "";
     }
 
-    function searchData() {
+    function searchHandler() {
         clearTimeout(window.st);
-        window.st = setTimeout(() => loadData(document.getElementById('search').value), 800);
+        window.st = setTimeout(() => {
+            const q = document.getElementById('searchInput').value;
+            loadContent(`https://api.jikan.moe/v4/${currentMode}?q=${q}&limit=24`);
+        }, 800);
     }
 
-    // DISQUS CONFIG
-    (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://animepro-1.disqus.com/embed.js'; // Você pode criar sua conta no Disqus e trocar esse ID
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
+    loadContent();
 </script>
 </body>
 </html>
