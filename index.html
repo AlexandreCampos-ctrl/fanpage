@@ -280,35 +280,36 @@
     // PLAYER DE MÍDIA (SOLUÇÃO FINAL)
     function playMedia(num) {
     const id = selectedItem.mal_id;
-    const player = document.getElementById('mainPlayer');
+    const player = document.getElementById('mainIframe');
     const errorBox = document.getElementById('errorHandler');
     const extLink = document.getElementById('externalLink');
 
-    // 1. Definição do Link Seguro (Embedder é o mais estável para IDs do MyAnimeList)
-    const streamUrl = `https://embedder.net/e/anime/${id}/${num}`;
+    // TESTAREMOS 2 SERVIDORES DIFERENTES
+    // Servidor A (Mais rápido)
+    const serverA = `https://embedder.net/e/anime/${id}/${num}`;
+    // Servidor B (Mais compatível)
+    const serverB = `https://s1.animesapi.com/embed/${id}/${num}`;
 
     if(currentMode === 'anime') {
-        // 2. Tenta carregar no seu site primeiro
-        player.src = streamUrl;
+        // Tenta o Servidor B primeiro que é mais estável para sites novos
+        player.src = serverB;
         
-        // 3. Ativa o "Plano B" (Botão de Emergência)
-        // Isso é o que garante que o usuário assista se o iframe falhar
         if(errorBox) {
             errorBox.style.display = "block";
-            errorBox.style.background = "#1a1a1a";
-            errorBox.style.border = "1px solid #F47521";
             errorBox.innerHTML = `
-                <div style="padding: 10px;">
-                    <p style="color: #fff; margin-bottom: 5px;">⚠️ O vídeo não carregou abaixo?</p>
-                    <a href="${streamUrl}" target="_blank" 
-                       style="color: #F47521; font-weight: bold; text-decoration: underline; font-size: 1.1rem;">
-                       CLIQUE AQUI PARA ASSISTIR EM TELA CHEIA (SEM ERROS)
+                <div style="background: #222; padding: 15px; border-radius: 10px; border: 1px solid var(--primary); margin-bottom:15px;">
+                    <p style="margin-bottom:10px; font-weight:bold;">OPÇÕES DE PLAYER:</p>
+                    <button onclick="document.getElementById('mainIframe').src='${serverA}'" style="padding:5px 10px; background:var(--primary); border:none; cursor:pointer; font-weight:bold; border-radius:3px;">SERVIDOR 1</button>
+                    <button onclick="document.getElementById('mainIframe').src='${serverB}'" style="padding:5px 10px; background:#444; color:white; border:none; cursor:pointer; font-weight:bold; border-radius:3px; margin-left:10px;">SERVIDOR 2</button>
+                    <hr style="margin:10px 0; border:0; border-top:1px solid #333;">
+                    <a href="${serverB}" target="_blank" style="color: var(--primary); font-size: 13px; text-decoration: underline;">
+                        ABRIR EM TELA CHEIA (CASO O PLAYER NÃO CARREGUE)
                     </a>
                 </div>
             `;
         }
     } else {
-        // Se for mangá, abre direto a busca externa (Manganato)
+        // Link para Mangá
         const mangaUrl = `https://manganato.com/search/story/${selectedItem.title.replace(/\s+/g, '_')}`;
         window.open(mangaUrl, '_blank');
     }
