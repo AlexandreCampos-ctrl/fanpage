@@ -1,204 +1,376 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimePro Ultra | Final Edition</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
-        
-        :root {
-            --primary: #F47521;
-            --bg: #050505;
-            --card: #121212;
-            --text: #ffffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnimePro Ultra</title>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        /* HUB DE ENTRADA */
-        #hub {
-            height: 100vh; width: 100%; position: fixed; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images8.alphacoders.com/632/632124.png') center/cover;
-            transition: 0.8s;
-        }
-        .hub-box { display: flex; gap: 20px; margin-top: 30px; }
-        .btn-hub { padding: 25px 50px; border: 2px solid var(--primary); background: rgba(0,0,0,0.6); color: white; border-radius: 15px; cursor: pointer; font-family: 'Oswald'; font-size: 1.5rem; transition: 0.4s; }
-        .btn-hub:hover { background: var(--primary); transform: translateY(-10px); box-shadow: 0 0 30px var(--primary); }
+<style>
+:root {
+    --primary: #F47521;
+    --bg: #050505;
+    --card: #121212;
+    --text: #ffffff;
+}
 
-        /* SITE PRINCIPAL */
-        #site { display: none; }
-        nav { padding: 15px 5%; background: #000; border-bottom: 2px solid var(--primary); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-family: 'Oswald'; font-size: 2rem; color: var(--primary); cursor: pointer; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* BANNER */
-        .hero { height: 450px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 50px 5%; background-image: linear-gradient(to top, var(--bg), transparent); }
-        .hero h1 { font-family: 'Oswald'; font-size: 3.5rem; text-shadow: 0 0 20px #000; }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
 
-        /* GRID ANIMES */
-        .container { padding: 40px 5%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
-        .card { background: var(--card); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid #222; transition: 0.3s; }
-        .card:hover { border-color: var(--primary); transform: scale(1.03); }
-        .card img { width: 100%; height: 280px; object-fit: cover; }
-        .card-title { padding: 15px; font-weight: 600; text-align: center; font-size: 0.9rem; }
+/* HUB */
+#hub {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(0,0,0,.8), rgba(0,0,0,.9)),
+    url('https://images8.alphacoders.com/632/632124.png') center/cover;
+    transition: .8s;
+}
 
-        /* MODAL E BOTÃO ASSISTIR (O QUE NÃO APARECIA) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; overflow-y: auto; padding: 40px 20px; }
-        .modal-content { max-width: 900px; margin: 0 auto; text-align: center; }
-        
-        .player-visual {
-            width: 100%; aspect-ratio: 16/9; background: #111; border-radius: 20px; border: 2px solid #333;
-            margin-bottom: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background-size: cover; background-position: center; position: relative; overflow: hidden;
-        }
-        .player-visual::before { content: ''; position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+.hub-box {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
 
-        /* BOTÃO "ASSISTIR AGORA" - FORÇADO */
-        .btn-play-final {
-            display: none; /* Começa escondido, JS vai mostrar */
-            position: relative; z-index: 10;
-            padding: 20px 50px; background: var(--primary); color: #000;
-            text-decoration: none; font-weight: 900; font-size: 1.5rem;
-            border-radius: 50px; text-transform: uppercase;
-            box-shadow: 0 0 40px rgba(244, 117, 33, 0.6);
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+.btn-hub {
+    padding: 25px 50px;
+    border: 2px solid var(--primary);
+    background: rgba(0,0,0,.6);
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Oswald';
+    font-size: 1.5rem;
+    transition: .3s;
+}
 
-        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 10px; margin-top: 30px; }
-        .ep-item { background: #222; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; border: 1px solid #444; }
-        .ep-item:hover { background: var(--primary); color: #000; }
+.btn-hub:hover {
+    background: var(--primary);
+    transform: translateY(-10px);
+    box-shadow: 0 0 30px var(--primary);
+}
 
-        #disqus_thread { margin-top: 50px; background: #111; padding: 20px; border-radius: 10px; }
-    </style>
+/* SITE */
+#site { display: none; }
+
+nav {
+    padding: 15px 5%;
+    background: #000;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+}
+
+.logo {
+    font-family: 'Oswald';
+    font-size: 2rem;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+input {
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background: #222;
+    color: white;
+    width: 250px;
+}
+
+/* HERO */
+.hero {
+    height: 450px;
+    display: flex;
+    align-items: flex-end;
+    padding: 50px 5%;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero h1 {
+    font-family: 'Oswald';
+    font-size: 3.5rem;
+}
+
+/* GRID */
+.container { padding: 40px 5%; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+    gap: 25px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .3s;
+    border: 1px solid #222;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.card-title {
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.95);
+    z-index: 3000;
+    overflow-y: auto;
+    padding: 40px 20px;
+}
+
+.modal-content {
+    max-width: 900px;
+    margin: auto;
+    text-align: center;
+}
+
+.player {
+    aspect-ratio: 16/9;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.player::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+}
+
+.btn-play {
+    display: none;
+    position: relative;
+    z-index: 2;
+    padding: 20px 50px;
+    background: var(--primary);
+    color: #000;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+
+.ep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px,1fr));
+    gap: 10px;
+}
+
+.ep {
+    background: #222;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #444;
+}
+
+.ep:hover {
+    background: var(--primary);
+    color: #000;
+}
+</style>
 </head>
+
 <body>
 
 <div id="hub">
-    <h1 style="font-family:'Oswald'; font-size: 4rem; color:var(--primary);">ANIMEPRO</h1>
+    <h1 style="font-family:Oswald;color:var(--primary);font-size:4rem">ANIMEPRO</h1>
     <div class="hub-box">
-        <div class="btn-hub" onclick="start('anime')">ANIMES</div>
-        <div class="btn-hub" onclick="start('manga')">MANGÁS</div>
+        <button class="btn-hub" data-type="anime">ANIMES</button>
+        <button class="btn-hub" data-type="manga">MANGÁS</button>
     </div>
 </div>
 
 <div id="site">
     <nav>
-        <div class="logo" onclick="location.reload()">ANIMEPRO</div>
-        <input type="text" id="search" placeholder="Buscar..." oninput="doSearch()" style="padding:10px; border-radius:20px; border:none; width:250px; background:#222; color:white;">
+        <div class="logo">ANIMEPRO</div>
+        <input id="search" placeholder="Buscar...">
     </nav>
 
     <div class="hero" id="hero">
-        <h1 id="heroT">Destaque</h1>
+        <h1 id="heroT"></h1>
     </div>
 
     <div class="container">
-        <h2 style="margin-bottom:25px; font-family:'Oswald'; border-left: 5px solid var(--primary); padding-left:15px;">MAIS POPULARES</h2>
-        <div class="grid" id="mainGrid"></div>
+        <h2 style="font-family:Oswald;margin-bottom:20px">POPULARES</h2>
+        <div class="grid" id="grid"></div>
     </div>
 </div>
 
-<div id="modal" class="modal">
+<div class="modal" id="modal">
     <div class="modal-content">
-        <span onclick="closeM()" style="float:right; cursor:pointer; font-size:40px; color:var(--primary);">&times;</span>
-        <h2 id="mT" style="font-family:'Oswald'; font-size: 2.5rem; margin-bottom: 20px;">Título</h2>
-
-        <div class="player-visual" id="pVis">
-            <p id="pStatus" style="position:relative; z-index:10; font-size:1.2rem;">Escolha um episódio abaixo para liberar o sinal:</p>
-            <a id="targetBtn" href="#" target="_blank" class="btn-play-final">ASSISTIR AGORA ▶</a>
+        <h2 id="modalTitle"></h2>
+        <div class="player" id="player">
+            <a id="playBtn" class="btn-play" target="_blank">ASSISTIR AGORA ▶</a>
         </div>
-
         <div class="ep-grid" id="epGrid"></div>
-        
-        <div id="disqus_thread"></div>
     </div>
 </div>
 
 <script>
-    let mode = 'anime';
-    let selected = null;
+const app = {
+    mode: 'anime',
+    data: [],
+    selected: null
+};
 
-    function start(type) {
-        mode = type;
-        document.getElementById('hub').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('hub').style.display = 'none';
-            document.getElementById('site').style.display = 'block';
-            loadData();
-        }, 800);
+const hub = document.getElementById('hub');
+const site = document.getElementById('site');
+const grid = document.getElementById('grid');
+const modal = document.getElementById('modal');
+const epGrid = document.getElementById('epGrid');
+const playBtn = document.getElementById('playBtn');
+
+/* HUB */
+document.querySelectorAll('.btn-hub').forEach(btn => {
+    btn.addEventListener('click', () => start(btn.dataset.type));
+});
+
+function start(type) {
+    app.mode = type;
+    hub.style.opacity = 0;
+    setTimeout(() => {
+        hub.style.display = 'none';
+        site.style.display = 'block';
+        loadData();
+    }, 800);
+}
+
+/* API */
+async function loadData(query = '') {
+    grid.innerHTML = 'Carregando...';
+
+    try {
+        const url = query
+            ? `https://api.jikan.moe/v4/${app.mode}?q=${query}`
+            : `https://api.jikan.moe/v4/top/${app.mode}?limit=24`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Erro API');
+
+        const json = await res.json();
+        app.data = json.data;
+
+        renderGrid();
+        setHero(app.data[0]);
+
+    } catch {
+        grid.innerHTML = 'Erro ao carregar 😢';
     }
+}
 
-    async function loadData(query = '') {
-        const grid = document.getElementById('mainGrid');
-        grid.innerHTML = "Carregando...";
-        let url = query ? `https://api.jikan.moe/v4/${mode}?q=${query}` : `https://api.jikan.moe/v4/top/${mode}?limit=24`;
-        
-        const r = await fetch(url);
-        const d = await r.json();
-        
-        if(!query) {
-            const top = d.data[0];
-            document.getElementById('hero').style.backgroundImage = `linear-gradient(to top, #050505, transparent), url('${top.images.jpg.large_image_url}')`;
-            document.getElementById('heroT').innerText = top.title;
-        }
+function renderGrid() {
+    grid.innerHTML = app.data.map((item, i) => `
+        <div class="card" data-index="${i}">
+            <img src="${item.images.jpg.large_image_url}">
+            <div class="card-title">${item.title}</div>
+        </div>
+    `).join('');
 
-        grid.innerHTML = d.data.map(item => `
-            <div class="card" onclick='openM(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-                <img src="${item.images.jpg.large_image_url}">
-                <div class="card-title">${item.title}</div>
-            </div>
-        `).join('');
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => openModal(card.dataset.index));
+    });
+}
+
+function setHero(item) {
+    document.getElementById('hero').style.backgroundImage =
+        `linear-gradient(to top,#050505,transparent),url('${item.images.jpg.large_image_url}')`;
+    document.getElementById('heroT').innerText = item.title;
+}
+
+/* MODAL */
+function openModal(index) {
+    app.selected = app.data[index];
+    modal.style.display = 'block';
+    document.getElementById('modalTitle').innerText = app.selected.title;
+    document.getElementById('player').style.backgroundImage =
+        `url('${app.selected.images.jpg.large_image_url}')`;
+
+    playBtn.style.display = 'none';
+    renderEpisodes();
+}
+
+function renderEpisodes() {
+    const total = app.mode === 'anime'
+        ? app.selected.episodes || 12
+        : app.selected.chapters || 50;
+
+    let html = '';
+    for (let i = 1; i <= total; i++) {
+        html += `<div class="ep" data-ep="${i}">${i}</div>`;
     }
+    epGrid.innerHTML = html;
 
-    function openM(item) {
-        selected = item;
-        document.getElementById('modal').style.display = 'block';
-        document.getElementById('mT').innerText = item.title;
-        document.getElementById('pVis').style.backgroundImage = `url('${item.images.jpg.large_image_url}')`;
-        
-        // Reset do botão
-        document.getElementById('targetBtn').style.display = "none";
-        document.getElementById('pStatus').style.display = "block";
+    document.querySelectorAll('.ep').forEach(ep => {
+        ep.addEventListener('click', () => activate(ep.dataset.ep));
+    });
+}
 
-        const grid = document.getElementById('epGrid');
-        grid.innerHTML = "";
-        const total = mode === 'anime' ? (item.episodes || 12) : (item.chapters || 50);
-        for(let i=1; i<=total; i++) {
-            grid.innerHTML += `<div class="ep-item" onclick="activate(${i})">${i}</div>`;
-        }
-    }
+function activate(ep) {
+    const link = app.mode === 'anime'
+        ? `https://embedder.net/e/anime/${app.selected.mal_id}/${ep}`
+        : `https://manganato.com`;
 
-    function activate(num) {
-        const btn = document.getElementById('targetBtn');
-        const status = document.getElementById('pStatus');
-        
-        // LINK DINÂMICO
-        const finalUrl = mode === 'anime' 
-            ? `https://embedder.net/e/anime/${selected.mal_id}/${num}`
-            : `https://manganato.com/search/story/${selected.title.replace(/\s+/g, '_')}`;
+    playBtn.href = link;
+    playBtn.style.display = 'inline-block';
+}
 
-        // MOSTRAR O BOTÃO NA MARRA
-        status.style.display = "none";
-        btn.href = finalUrl;
-        btn.style.display = "inline-block"; // FORÇA A APARIÇÃO
-        
-        console.log("Botão ativado para o link: " + finalUrl);
-    }
+/* FECHAR MODAL */
+modal.addEventListener('click', e => {
+    if (e.target === modal) modal.style.display = 'none';
+});
 
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') modal.style.display = 'none';
+});
 
-    function doSearch() {
-        clearTimeout(window.t);
-        window.t = setTimeout(() => loadData(document.getElementById('search').value), 800);
-    }
+/* BUSCA */
+let t;
+document.getElementById('search').addEventListener('input', e => {
+    clearTimeout(t);
+    t = setTimeout(() => loadData(e.target.value), 700);
+});
 </script>
 </body>
 </html>
