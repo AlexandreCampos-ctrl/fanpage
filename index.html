@@ -3,198 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimePro v1.7 | Portal Ultra</title>
+    <title>AnimePro 2.0 | Experience</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700&display=swap');
-        :root { --primary: #F47521; --bg: #050505; --surface: #121212; --text: #fff; }
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto:wght@300;400;700&display=swap');
+        :root { --primary: #F47521; --bg: #0a0a0a; --card: #1a1a1a; --text: #eee; }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* TELA DE ENTRADA ÉPICA */
-        #choice-screen {
-            height: 100vh; width: 100%; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://images.alphacoders.com/605/605156.jpg') center/cover;
-            position: fixed; z-index: 9999; text-align: center;
-        }
-        .choice-container { display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
-        .choice-card {
-            width: 280px; padding: 40px; background: rgba(0,0,0,0.6);
-            border: 3px solid var(--primary); border-radius: 20px; cursor: pointer;
-            transition: 0.4s; backdrop-filter: blur(10px);
-        }
-        .choice-card:hover { transform: translateY(-15px); background: var(--primary); box-shadow: 0 0 30px var(--primary); }
-        .choice-card h2 { font-family: 'Oswald'; font-size: 2.5rem; }
+        /* TELA INICIAL HUB */
+        #hub { height: 100vh; display: flex; justify-content: center; align-items: center; gap: 40px; background: #000; position: fixed; width: 100%; z-index: 9999; transition: 0.8s; }
+        .hub-card { width: 300px; height: 450px; border-radius: 20px; cursor: pointer; position: relative; overflow: hidden; border: 2px solid #333; transition: 0.5s; }
+        .hub-card:hover { border-color: var(--primary); transform: scale(1.05); box-shadow: 0 0 50px rgba(244, 117, 33, 0.3); }
+        .hub-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+        .hub-card h2 { position: absolute; bottom: 30px; width: 100%; text-align: center; font-family: 'Oswald'; font-size: 2.5rem; }
 
-        /* INTERFACE PRINCIPAL */
-        #main-interface { display: none; }
-        header { padding: 20px 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); }
-        .logo { font-family: 'Oswald'; font-size: 2.5rem; color: var(--primary); cursor: pointer; }
-        
+        /* HEADER & FILTROS */
+        header { padding: 20px 5%; background: rgba(0,0,0,0.9); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 100; }
+        .categories { padding: 15px 5%; display: flex; gap: 10px; overflow-x: auto; background: #111; }
+        .categories button { background: #222; border: 1px solid #444; color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 14px; white-space: nowrap; }
+        .categories button:hover { background: var(--primary); border-color: var(--primary); }
+
+        /* GRID PRO */
         .grid { display: grid; padding: 30px 5%; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
-        .card { background: var(--surface); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid #333; transition: 0.3s; }
-        .card:hover { border-color: var(--primary); transform: scale(1.05); }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; }
+        .card:hover { transform: translateY(-10px); }
         .card img { width: 100%; height: 260px; object-fit: cover; }
+        .card-title { padding: 15px; font-size: 14px; font-weight: 700; text-align: center; }
 
-        /* MODAL ATUALIZADO */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; overflow-y: auto; }
-        .modal-content { max-width: 900px; margin: 50px auto; background: #111; padding: 30px; border-radius: 15px; border: 1px solid #444; }
-        
-        .player-info { display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
-        select { flex: 1; padding: 12px; background: #222; color: #fff; border: 1px solid var(--primary); border-radius: 5px; cursor: pointer; }
-        
-        .btn-play { 
-            display: block; width: 100%; padding: 20px; background: var(--primary); 
-            color: #fff; text-align: center; text-decoration: none; font-weight: bold; 
-            font-size: 1.2rem; border-radius: 10px; margin: 20px 0; transition: 0.3s;
-        }
-        .btn-play:hover { background: #ff8c00; transform: scale(1.02); }
+        /* PLAYER & READER MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; }
+        .modal-content { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .close-btn { position: fixed; top: 20px; right: 30px; font-size: 40px; color: var(--primary); cursor: pointer; z-index: 2100; }
 
-        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 10px; margin-top: 20px; }
-        .ep-item { background: #333; padding: 15px; text-align: center; cursor: pointer; border-radius: 8px; font-weight: bold; transition: 0.2s; }
-        .ep-item:hover, .ep-item.active { background: var(--primary); }
-        .close { float: right; font-size: 40px; color: var(--primary); cursor: pointer; line-height: 1; }
+        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
+        
+        /* READER ZEN MODE */
+        #manga-reader { display: none; background: #fff; color: #000; min-height: 100vh; padding: 20px; }
+        #manga-reader img { display: block; margin: 0 auto 20px; max-width: 900px; width: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+
+        .ep-selector { margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 10px; }
+        .ep-btn { background: #222; border: 1px solid #444; color: #fff; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; }
+        .ep-btn:hover { background: var(--primary); }
+
+        /* COMMENTS */
+        #comments-section { margin-top: 50px; padding-top: 30px; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
-<div id="choice-screen">
-    <h1 style="font-family:'Oswald'; font-size: 4rem; text-shadow: 2px 2px 10px #000;">ANIME PRO</h1>
-    <p style="font-size: 1.2rem; margin-bottom: 20px;">O universo Otaku na palma da sua mão</p>
-    <div class="choice-container">
-        <div class="choice-card" onclick="entrar('anime')">
-            <div style="font-size: 5rem;">🎬</div>
-            <h2>ASSISTIR</h2>
-        </div>
-        <div class="choice-card" onclick="entrar('manga')">
-            <div style="font-size: 5rem;">📖</div>
-            <h2>LER</h2>
-        </div>
+<div id="hub">
+    <div class="hub-card" onclick="startApp('anime')">
+        <img src="https://wallpaperaccess.com/full/19965.jpg">
+        <h2>ASSISTIR ANIMES</h2>
+    </div>
+    <div class="hub-card" onclick="startApp('manga')">
+        <img src="https://images3.alphacoders.com/640/640856.jpg">
+        <h2>LER MANGÁS</h2>
     </div>
 </div>
 
-<div id="main-interface">
+<div id="app" style="display:none;">
     <header>
-        <div class="logo" onclick="location.reload()">ANIME<span>PRO</span></div>
-        <input type="text" id="searchInput" placeholder="Buscar no catálogo..." oninput="debounceSearch()" style="padding:12px; background:#222; color:#fff; border:1px solid #444; border-radius:30px; width:300px;">
+        <h1 onclick="location.reload()" style="font-family:'Oswald'; color:var(--primary); cursor:pointer;">ANIMEPRO</h1>
+        <input type="text" id="search" placeholder="Buscar título..." oninput="searchData()" style="padding:10px; border-radius:25px; border:none; width:300px; background:#222; color:#fff;">
     </header>
-    <div class="grid" id="mainGrid"></div>
+
+    <div class="categories" id="catBar">
+        <button onclick="loadByGenre(1)">Ação</button>
+        <button onclick="loadByGenre(2)">Aventura</button>
+        <button onclick="loadByGenre(4)">Comédia</button>
+        <button onclick="loadByGenre(10)">Fantasia</button>
+        <button onclick="loadByGenre(22)">Romance</button>
+        <button onclick="loadByGenre(27)">Shounen</button>
+        <button onclick="loadByGenre(37)">Sobrenatural</button>
+    </div>
+
+    <div class="grid" id="contentGrid"></div>
 </div>
 
-<div id="mainModal" class="modal">
+<div id="modal" class="modal">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle" style="font-family:'Oswald'; font-size: 2rem; color: var(--primary);">Título</h2>
+        <h1 id="mTitle" style="font-family:'Oswald'; margin-bottom: 20px;">Título</h1>
         
-        <div class="player-info">
-            <select id="seasonSelect">
-                <option value="1">1ª Temporada</option>
-                <option value="2">2ª Temporada</option>
-            </select>
-            <select id="langSelect">
-                <option value="legendado">Legendado</option>
-                <option value="dublado">Dublado (Se disponível)</option>
-            </select>
+        <div id="video-area" class="video-container">
+            <iframe id="player" src="" allowfullscreen></iframe>
         </div>
 
-        <p id="selectedEpText" style="text-align:center; color: #aaa;">Selecione um episódio abaixo:</p>
-        <a id="btnAssistir" href="#" target="_blank" class="btn-play" style="display:none;">DAR O PLAY AGORA ▶</a>
-        
-        <div class="ep-grid" id="epGrid"></div>
+        <div id="manga-reader">
+            </div>
+
+        <div class="ep-selector" id="epSelector"></div>
+
+        <div id="comments-section">
+            <h3 style="margin-bottom:20px;">Opiniões da Comunidade</h3>
+            <div id="disqus_thread"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    let mode = 'anime';
+    let currentType = 'anime';
     let currentItem = null;
-    let selectedEp = null;
 
-    function entrar(tipo) {
-        mode = tipo;
-        document.getElementById('choice-screen').style.opacity = '0';
+    function startApp(type) {
+        currentType = type;
+        document.getElementById('hub').style.transform = 'translateY(-100%)';
         setTimeout(() => {
-            document.getElementById('choice-screen').style.display = 'none';
-            document.getElementById('main-interface').style.display = 'block';
+            document.getElementById('hub').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
             loadData();
-        }, 500);
+        }, 800);
     }
 
-    async function loadData(query = '') {
-        const grid = document.getElementById('mainGrid');
-        grid.innerHTML = "<h2 style='grid-column:1/-1; text-align:center;'>Carregando conteúdo...</h2>";
-        let url = `https://api.jikan.moe/v4/${mode === 'anime' ? 'anime' : 'manga'}?order_by=popularity&limit=24`;
+    async function loadData(query = '', genre = '') {
+        const grid = document.getElementById('contentGrid');
+        grid.innerHTML = "<h2>Buscando no acervo...</h2>";
+        let url = `https://api.jikan.moe/v4/${currentType === 'anime' ? 'anime' : 'manga'}?order_by=popularity&limit=24`;
         if(query) url += `&q=${query}`;
+        if(genre) url += `&genres=${genre}`;
+
+        const resp = await fetch(url);
+        const data = await resp.json();
         
-        try {
-            const resp = await fetch(url);
-            const data = await resp.json();
-            grid.innerHTML = data.data.map(item => `
-                <div class="card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-                    <img src="${item.images.jpg.large_image_url}">
-                    <div style="padding:15px; text-align:center; font-weight:bold;">${item.title}</div>
-                </div>
-            `).join('');
-        } catch(e) { grid.innerHTML = "Erro ao carregar. Tente atualizar a página."; }
+        grid.innerHTML = data.data.map(item => `
+            <div class="card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
+                <img src="${item.images.jpg.large_image_url}" loading="lazy">
+                <div class="card-title">${item.title}</div>
+            </div>
+        `).join('');
     }
+
+    function loadByGenre(id) { loadData('', id); }
 
     function openModal(item) {
         currentItem = item;
-        selectedEp = null;
-        document.getElementById('modalTitle').innerText = item.title;
-        document.getElementById('mainModal').style.display = 'block';
-        document.getElementById('btnAssistir').style.display = 'none';
-        document.getElementById('selectedEpText').innerText = "Selecione um episódio abaixo:";
+        document.getElementById('mTitle').innerText = item.title;
+        document.getElementById('modal').style.display = 'block';
         
-        const epGrid = document.getElementById('epGrid');
-        epGrid.innerHTML = "";
-        const total = mode === 'anime' ? (item.episodes || 24) : (item.chapters || 50);
+        const selector = document.getElementById('epSelector');
+        selector.innerHTML = "";
+        const total = currentType === 'anime' ? (item.episodes || 12) : (item.chapters || 40);
 
         for(let i=1; i<=total; i++) {
-            const div = document.createElement('div');
-            div.className = 'ep-item';
-            div.innerText = i;
-            div.onclick = function() {
-                // Remove destaque dos outros e coloca neste
-                document.querySelectorAll('.ep-item').forEach(el => el.classList.remove('active'));
-                this.classList.add('active');
-                prepararPlay(i);
-            };
-            epGrid.appendChild(div);
+            selector.innerHTML += `<div class="ep-btn" onclick="launch(${i})">${i}</div>`;
+        }
+
+        // Reset Disqus para o novo anime
+        if (window.DISQUS) {
+            DISQUS.reset({ reload: true, config: function () { this.page.identifier = item.mal_id; this.page.url = window.location.href + "#!" + item.mal_id; } });
         }
     }
 
-    function prepararPlay(num) {
-    selectedEp = num;
-    const lang = document.getElementById('langSelect').value;
-    const id = currentItem.mal_id;
-    const title = currentItem.title;
-    
-    // Configuração de múltiplos servidores paliativos
-    const s1 = `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`;
-    const s2 = `https://supervideo.tv/e/anime/${id}/${num}`; // Servidor Alternativo 1
-    const s3 = `https://www.google.com/search?q=assistir+${title.replace(/\s+/g, '+')}+episodio+${num}+${lang}`;
-
-    const btnArea = document.getElementById('epGrid');
-    
-    // Atualiza a área de ação com múltiplas opções de player
-    document.getElementById('selectedEpText').innerHTML = `
-        <div style="background:#222; padding:15px; border-radius:10px; border:1px solid var(--primary);">
-            <p style="margin-bottom:10px;">Episódio ${num} selecionado!</p>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <a href="${s1}" target="_blank" class="btn-play" style="margin:0; background:#444;">TESTAR SERVIDOR 1 (Embedder)</a>
-                <a href="${s2}" target="_blank" class="btn-play" style="margin:0; background:#444;">TESTAR SERVIDOR 2 (SuperVideo)</a>
-                <a href="${s3}" target="_blank" class="btn-play" style="margin:0; background:var(--primary);">BUSCA EXTERNA (Google)</a>
-            </div>
-            <p style="font-size:11px; color:orange; margin-top:10px;">Nota: Se o Servidor 1 der "Web server is down", use as outras opções.</p>
-        </div>
-    `;
-}
-    function closeModal() { document.getElementById('mainModal').style.display = 'none'; }
-
-    function debounceSearch() {
-        clearTimeout(window.searchTimer);
-        window.searchTimer = setTimeout(() => loadData(document.getElementById('searchInput').value), 800);
+    function launch(num) {
+        if(currentType === 'anime') {
+            document.getElementById('video-area').style.display = 'block';
+            document.getElementById('manga-reader').style.display = 'none';
+            // Servidor paliativo inteligente
+            document.getElementById('player').src = `https://embedder.net/e/anime/${currentItem.mal_id}/${num}`;
+        } else {
+            document.getElementById('video-area').style.display = 'none';
+            document.getElementById('manga-reader').style.display = 'block';
+            document.getElementById('manga-reader').innerHTML = `
+                <h2 style="text-align:center; padding:20px;">Capítulo ${num}</h2>
+                <img src="https://via.placeholder.com/800x1200.png?text=Pagina+1+de+Leitura">
+                <img src="https://via.placeholder.com/800x1200.png?text=Pagina+2+de+Leitura">
+            `;
+            window.scrollTo(0,0);
+        }
     }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('player').src = "";
+    }
+
+    function searchData() {
+        clearTimeout(window.st);
+        window.st = setTimeout(() => loadData(document.getElementById('search').value), 800);
+    }
+
+    // DISQUS CONFIG
+    (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://animepro-1.disqus.com/embed.js'; // Você pode criar sua conta no Disqus e trocar esse ID
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
 </body>
 </html>
