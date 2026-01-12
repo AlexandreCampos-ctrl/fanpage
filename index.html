@@ -164,20 +164,27 @@
     }
 
     function prepararPlay(num) {
-        selectedEp = num;
-        const lang = document.getElementById('langSelect').value;
-        const id = currentItem.mal_id;
-        
-        // Link direto que funciona fora do iframe (paliativo estável)
-        let finalUrl = mode === 'anime' 
-            ? `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`
-            : `https://manganato.com/search/story/${currentItem.title.replace(/\s+/g, '_')}`;
-
-        const btn = document.getElementById('btnAssistir');
-        btn.href = finalUrl;
-        btn.style.display = 'block';
-        document.getElementById('selectedEpText').innerText = `${mode === 'anime' ? 'Episódio' : 'Capítulo'} ${num} selecionado!`;
-    }
+    selectedEp = num;
+    const lang = document.getElementById('langSelect').value;
+    const season = document.getElementById('seasonSelect').value;
+    const id = currentItem.mal_id;
+    
+    // Lista de servidores para o usuário testar (Caso um dê erro)
+    const server1 = `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`;
+    const server2 = `https://www.animesonline.cc/search/${currentItem.title.replace(/\s+/g, '+')}`;
+    
+    const btn = document.getElementById('btnAssistir');
+    
+    // Se o servidor 1 der erro, o usuário tem o nome do anime para buscar no servidor 2
+    btn.href = server1; 
+    btn.style.display = 'block';
+    
+    // Adiciona uma dica visual
+    document.getElementById('selectedEpText').innerHTML = `
+        <p>Episódio ${num} pronto!</p>
+        <p style="font-size:10px; color:orange;">Se o link principal falhar, tente buscar por: <b>${currentItem.title}</b></p>
+    `;
+}
 
     function closeModal() { document.getElementById('mainModal').style.display = 'none'; }
 
