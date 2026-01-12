@@ -279,24 +279,26 @@
 
     // PLAYER DE MÍDIA (SOLUÇÃO FINAL)
     function playMedia(num) {
-        const id = selectedItem.mal_id;
-        const player = document.getElementById('mainPlayer');
-        const errorBox = document.getElementById('errorHandler');
-        const extLink = document.getElementById('externalLink');
+    const id = selectedItem.mal_id;
+    const player = document.getElementById('mainPlayer');
+    const errorBox = document.getElementById('errorHandler');
+    
+    // ESTE É O LINK CORRETO PARA ANIMES (Embedder)
+    const streamUrl = currentMode === 'anime' 
+        ? `https://embedder.net/e/anime/${id}/${num}`
+        : `https://manganato.com/search/story/${selectedItem.title.replace(/\s+/g, '_')}`;
 
-        // Link Paliativo Seguro
-        const streamUrl = currentMode === 'anime' 
-            ? `https://embedder.net/e/anime/${id}/${num}`
-            : `https://manganato.com/search/story/${selectedItem.title.replace(/\s+/g, '_')}`;
-
-        if(currentMode === 'anime') {
-            player.src = streamUrl;
+    if(currentMode === 'anime') {
+        player.src = streamUrl;
+        if(errorBox) {
             errorBox.style.display = "block";
-            extLink.href = streamUrl;
-        } else {
-            window.open(streamUrl, '_blank');
+            document.getElementById('externalLink').href = streamUrl;
         }
+    } else {
+        // Para mangás, abre em aba nova para melhor leitura
+        window.open(streamUrl, '_blank');
     }
+}
 
     function closeModal() {
         document.getElementById('modal').style.display = 'none';
