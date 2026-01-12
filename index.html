@@ -13,17 +13,11 @@
             --bg-card: #121212;
             --bg-nav: rgba(0,0,0,0.95);
             --text-white: #ffffff;
-            --text-gray: #b3b3b3;
             --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg-body); color: var(--text-white); overflow-x: hidden; }
-
-        /* SCROLLBAR PERSONALIZADA */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
         /* TELA DE ENTRADA (HUB) */
         #hub-screen {
@@ -40,7 +34,6 @@
             border-radius: 20px; cursor: pointer; transition: var(--transition); backdrop-filter: blur(10px); text-align: center;
         }
         .hub-btn:hover { background: var(--primary); transform: translateY(-15px); box-shadow: 0 0 50px var(--primary); }
-        .hub-btn i { font-size: 3rem; display: block; margin-bottom: 15px; }
         .hub-btn h2 { font-family: 'Oswald'; font-size: 2rem; }
 
         /* INTERFACE PRINCIPAL */
@@ -50,64 +43,52 @@
             padding: 15px 5%; background: var(--bg-nav); display: flex; justify-content: space-between;
             align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary);
         }
-        .nav-logo { font-family: 'Oswald'; font-size: 2.2rem; color: var(--primary); text-transform: uppercase; cursor: pointer; }
+        .nav-logo { font-family: 'Oswald'; font-size: 2.2rem; color: var(--primary); cursor: pointer; }
         .search-box { background: #1a1a1a; border-radius: 25px; padding: 8px 20px; display: flex; align-items: center; width: 100%; max-width: 400px; }
         .search-box input { background: transparent; border: none; color: white; width: 100%; outline: none; margin-left: 10px; }
 
-        /* HERO BANNER DINÂMICO */
+        /* HERO BANNER */
         .hero {
-            height: 550px; width: 100%; position: relative;
+            height: 500px; width: 100%; position: relative;
             display: flex; align-items: flex-end; padding: 0 5% 80px;
-            background-size: cover; background-position: center;
-            transition: 0.8s;
+            background-size: cover; background-position: center; transition: 0.8s;
         }
         .hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg-body), transparent); }
         .hero-content { position: relative; z-index: 10; max-width: 700px; }
-        .hero-content h1 { font-family: 'Oswald'; font-size: 4rem; line-height: 1.1; margin-bottom: 20px; }
-        .btn-play { background: var(--primary); color: #000; padding: 15px 40px; border-radius: 5px; text-decoration: none; font-weight: 700; display: inline-block; transition: 0.3s; }
-        .btn-play:hover { transform: scale(1.05); filter: brightness(1.2); }
+        .hero-content h1 { font-family: 'Oswald'; font-size: 3.5rem; margin-bottom: 20px; }
 
-        /* CATEGORIAS */
-        .categories-nav { padding: 20px 5%; background: #0a0a0a; display: flex; gap: 15px; overflow-x: auto; white-space: nowrap; }
-        .cat-tag { background: #222; padding: 10px 25px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 14px; }
-        .cat-tag:hover, .cat-tag.active { background: var(--primary); color: #000; }
-
-        /* GRID DE CONTEÚDO */
+        /* GRID */
         .content-section { padding: 50px 5%; }
-        .section-title { font-family: 'Oswald'; font-size: 2rem; margin-bottom: 30px; border-left: 6px solid var(--primary); padding-left: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; }
+        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; }
+        .anime-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; cursor: pointer; transition: var(--transition); border: 1px solid #222; position: relative; }
+        .anime-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .anime-card img { width: 100%; height: 300px; object-fit: cover; }
+        .card-info { padding: 15px; text-align: center; font-weight: 600; }
 
-        .anime-card {
-            background: var(--bg-card); border-radius: 10px; overflow: hidden; 
-            cursor: pointer; transition: var(--transition); border: 1px solid #222;
-            position: relative;
-        }
-        .anime-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .anime-card img { width: 100%; height: 320px; object-fit: cover; }
-        .card-info { padding: 15px; text-align: center; }
-        .card-info h3 { font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .badge { position: absolute; top: 10px; right: 10px; background: var(--primary); color: #000; padding: 3px 10px; border-radius: 5px; font-weight: 700; font-size: 12px; }
-
-        /* MODAL CINEMA */
+        /* MODAL CINEMA (FIX TELA PRETA) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; overflow-y: auto; }
-        .modal-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-        .player-area { width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid #333; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; }
+        .modal-container { max-width: 1000px; margin: 50px auto; padding: 0 20px; }
         
-        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 12px; margin: 30px 0; }
-        .ep-card { background: #222; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .ep-card:hover { background: var(--primary); color: #000; transform: scale(1.1); }
-        
-        /* BOTÃO DE EMERGÊNCIA (SOLUÇÃO DE CONEXÃO) */
-        .error-handler { 
-            display: none; padding: 20px; background: #1a1a1a; border: 1px solid var(--primary); 
-            border-radius: 10px; text-align: center; margin-bottom: 20px; 
+        .player-launcher {
+            width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 2px solid #333;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; overflow: hidden;
         }
-        .error-handler a { color: var(--primary); font-weight: 700; text-decoration: none; }
+        #playerBg { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.3; filter: blur(5px); }
+        .launcher-content { position: relative; z-index: 10; text-align: center; }
+        
+        .btn-assistir {
+            display: none; padding: 18px 45px; background: var(--primary); color: #000;
+            text-decoration: none; font-weight: 800; border-radius: 8px; font-size: 1.2rem;
+            box-shadow: 0 0 30px rgba(244, 117, 33, 0.4); transition: 0.3s;
+        }
+        .btn-assistir:hover { transform: scale(1.1); filter: brightness(1.2); }
+
+        .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 12px; margin: 30px 0; }
+        .ep-card { background: #222; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .ep-card:hover { background: var(--primary); color: #000; }
 
         .close-modal { float: right; font-size: 40px; color: var(--primary); cursor: pointer; margin-top: -50px; }
-        
-        #disqus_thread { margin-top: 60px; background: #111; padding: 30px; border-radius: 15px; }
     </style>
 </head>
 <body>
@@ -115,75 +96,47 @@
 <div id="hub-screen">
     <div class="hub-logo">ANIMEPRO</div>
     <div class="hub-container">
-        <div class="hub-btn" onclick="initApp('anime')">
-            <i>📺</i>
-            <h2>ASSISTIR</h2>
-            <p style="font-size: 0.8rem; color: #ccc; margin-top: 10px;">Animes Online HD</p>
-        </div>
-        <div class="hub-btn" onclick="initApp('manga')">
-            <i>📖</i>
-            <h2>LER MANGÁ</h2>
-            <p style="font-size: 0.8rem; color: #ccc; margin-top: 10px;">Capítulos em PT-BR</p>
-        </div>
-        <div class="hub-btn" onclick="alert('Área de Membros em breve!')">
-            <i>👤</i>
-            <h2>CONTA</h2>
-            <p style="font-size: 0.8rem; color: #ccc; margin-top: 10px;">Perfil e Favoritos</p>
-        </div>
+        <div class="hub-btn" onclick="initApp('anime')"><h2>ASSISTIR</h2></div>
+        <div class="hub-btn" onclick="initApp('manga')"><h2>LER MANGÁ</h2></div>
+        <div class="hub-btn" onclick="alert('Sistema de Conta em Breve!')"><h2>CONTA</h2></div>
     </div>
 </div>
 
 <div id="main-site">
     <nav>
-        <div class="nav-logo" onclick="location.reload()">AnimePro</div>
+        <div class="nav-logo" onclick="location.reload()">ANIMEPRO</div>
         <div class="search-box">
-            <span>🔍</span>
-            <input type="text" id="searchInput" placeholder="O que você quer ver hoje?" oninput="debounceSearch()">
+            <input type="text" id="searchInput" placeholder="Buscar..." oninput="debounceSearch()">
         </div>
     </nav>
 
     <div class="hero" id="heroBanner">
         <div class="hero-content">
-            <h1 id="heroTitle">Solo Leveling</h1>
-            <p id="heroSynop" style="color: #ccc; margin-bottom: 25px; max-width: 600px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;"></p>
-            <a href="javascript:void(0)" onclick="openHero()" class="btn-play">ASSISTIR AGORA</a>
+            <h1 id="heroTitle">Carregando...</h1>
+            <button onclick="openHero()" style="padding:15px 40px; background:var(--primary); border:none; font-weight:bold; cursor:pointer; border-radius:5px;">ASSISTIR AGORA</button>
         </div>
     </div>
 
-    <div class="categories-nav" id="catNav">
-        <div class="cat-tag active" onclick="loadCatalog()">Lançamentos</div>
-        <div class="cat-tag" onclick="filterByGenre(1)">Ação</div>
-        <div class="cat-tag" onclick="filterByGenre(2)">Aventura</div>
-        <div class="cat-tag" onclick="filterByGenre(4)">Comédia</div>
-        <div class="cat-tag" onclick="filterByGenre(10)">Fantasia</div>
-        <div class="cat-tag" onclick="filterByGenre(22)">Romance</div>
-        <div class="cat-tag" onclick="filterByGenre(27)">Shounen</div>
-        <div class="cat-tag" onclick="filterByGenre(37)">Sobrenatural</div>
-    </div>
-
     <div class="content-section">
-        <h2 class="section-title" id="sectionLabel">Animes em Destaque</h2>
-        <div class="grid" id="mainGrid"></div>
+        <h2 id="sectionLabel" style="margin-bottom:25px; border-left:5px solid var(--primary); padding-left:15px;">POPULARES</h2>
+        <div class="anime-grid" id="mainGrid"></div>
     </div>
 </div>
 
 <div id="modal" class="modal">
     <div class="modal-container">
         <span class="close-modal" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle" style="font-family: 'Oswald'; font-size: 2.5rem; margin-bottom: 20px;">Título</h2>
+        <h2 id="modalTitle" style="font-family:'Oswald'; font-size:2.5rem; margin-bottom:20px;">Título</h2>
         
-        <div class="error-handler" id="errorHandler">
-            ⚠️ O vídeo bloqueou a conexão interna? 
-            <a id="externalLink" href="#" target="_blank">CLIQUE AQUI PARA ASSISTIR EM TELA CHEIA (ABA EXTERNA)</a>
-        </div>
-
-        <div class="player-area" id="pArea">
-            <iframe id="mainPlayer" src="" allowfullscreen></iframe>
+        <div class="player-launcher">
+            <img id="playerBg" src="">
+            <div class="launcher-content">
+                <p id="statusTxt" style="font-size:1.2rem; margin-bottom:20px;">Selecione um episódio abaixo</p>
+                <a id="btnPlay" href="#" target="_blank" class="btn-assistir">ASSISTIR AGORA ▶</a>
+            </div>
         </div>
 
         <div class="ep-grid" id="epGrid"></div>
-
-        <div id="disqus_thread"></div>
     </div>
 </div>
 
@@ -192,156 +145,82 @@
     let featuredItem = null;
     let selectedItem = null;
 
-    // INICIAR APLICAÇÃO
     function initApp(type) {
         currentMode = type;
-        const hub = document.getElementById('hub-screen');
-        const site = document.getElementById('main-site');
-        
-        hub.style.transform = 'scale(1.5)';
-        hub.style.opacity = '0';
-        
+        document.getElementById('hub-screen').style.opacity = '0';
         setTimeout(() => {
-            hub.style.display = 'none';
-            site.style.display = 'block';
-            setTimeout(() => site.style.opacity = '1', 50);
+            document.getElementById('hub-screen').style.display = 'none';
+            document.getElementById('main-site').style.display = 'block';
+            setTimeout(() => document.getElementById('main-site').style.opacity = '1', 50);
             loadHero();
             loadCatalog();
         }, 800);
     }
 
-    // CARREGAR BANNER DINÂMICO
     async function loadHero() {
-        try {
-            const resp = await fetch(`https://api.jikan.moe/v4/top/${currentMode}?limit=1`);
-            const data = await resp.json();
-            featuredItem = data.data[0];
-            
-            document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(to top, var(--bg-body), transparent), url('${featuredItem.images.jpg.large_image_url}')`;
-            document.getElementById('heroTitle').innerText = featuredItem.title;
-            document.getElementById('heroSynop').innerText = featuredItem.synopsis || "Sem sinopse disponível.";
-        } catch (e) { console.log("Erro ao carregar Hero"); }
+        const resp = await fetch(`https://api.jikan.moe/v4/top/anime?limit=1`);
+        const data = await resp.json();
+        featuredItem = data.data[0];
+        document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(to top, #050505, transparent), url('${featuredItem.images.jpg.large_image_url}')`;
+        document.getElementById('heroTitle').innerText = featuredItem.title;
     }
 
     function openHero() { if(featuredItem) openModal(featuredItem); }
 
-    // CARREGAR GRID DE CONTEÚDO
-    async function loadCatalog(url = '') {
+    async function loadCatalog(query = '') {
         const grid = document.getElementById('mainGrid');
-        grid.innerHTML = "<h2>Sincronizando...</h2>";
+        grid.innerHTML = "Carregando...";
+        let url = query ? `https://api.jikan.moe/v4/${currentMode}?q=${query}&limit=24` : `https://api.jikan.moe/v4/top/${currentMode}?limit=24`;
         
-        const fetchUrl = url || `https://api.jikan.moe/v4/top/${currentMode}?limit=24`;
-        const resp = await fetch(fetchUrl);
+        const resp = await fetch(url);
         const data = await resp.json();
-        
         grid.innerHTML = data.data.map(item => `
             <div class="anime-card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-                <div class="badge">★ ${item.score || '8.0'}</div>
-                <img src="${item.images.jpg.large_image_url}" loading="lazy">
-                <div class="card-info">
-                    <h3>${item.title}</h3>
-                </div>
+                <img src="${item.images.jpg.large_image_url}">
+                <div class="card-info">${item.title}</div>
             </div>
         `).join('');
     }
 
-    // FILTRO POR GÊNERO
-    function filterByGenre(id) {
-        document.querySelectorAll('.cat-tag').forEach(t => t.classList.remove('active'));
-        loadCatalog(`https://api.jikan.moe/v4/${currentMode}?genres=${id}&order_by=popularity&limit=24`);
-    }
-
-    // ABRIR MODAL
     function openModal(item) {
         selectedItem = item;
         document.getElementById('modalTitle').innerText = item.title;
         document.getElementById('modal').style.display = 'block';
-        document.getElementById('mainPlayer').src = "";
-        document.getElementById('errorHandler').style.display = "none";
+        document.getElementById('playerBg').src = item.images.jpg.large_image_url;
+        document.getElementById('btnPlay').style.display = "none";
+        document.getElementById('statusTxt').innerText = "Escolha um episódio abaixo:";
         
-        const epGrid = document.getElementById('epGrid');
-        epGrid.innerHTML = "";
+        const grid = document.getElementById('epGrid');
+        grid.innerHTML = "";
         const total = currentMode === 'anime' ? (item.episodes || 12) : (item.chapters || 50);
-
-        for(let i = 1; i <= total; i++) {
-            const btn = document.createElement('div');
-            btn.className = 'ep-card';
-            btn.innerText = i;
-            btn.onclick = () => playMedia(i);
-            epGrid.appendChild(btn);
-        }
-
-        // Resetar comentários Disqus para o novo item
-        if (typeof DISQUS !== 'undefined') {
-            DISQUS.reset({ reload: true, config: function () { this.page.identifier = item.mal_id; this.page.url = window.location.href + "#!" + item.mal_id; } });
+        for(let i=1; i<=total; i++) {
+            grid.innerHTML += `<div class="ep-card" onclick="prepareVideo(${i})">${i}</div>`;
         }
     }
 
-    // PLAYER DE MÍDIA (SOLUÇÃO FINAL)
-    function playMedia(num) {
-    const id = selectedItem.mal_id;
-    const title = selectedItem.title;
-    const player = document.getElementById('mainIframe');
-    const errorBox = document.getElementById('errorHandler');
-
-    // 1. Opção via ID (Embedder)
-    const url1 = `https://embedder.net/e/anime/${id}/${num}`;
-    
-    // 2. Opção via Título (SuperVideo - mais estável para animes novos como Bleach)
-    const slug = title.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
-    const url2 = `https://supervideo.tv/e/anime/${slug}/${num}`;
-
-    // 3. Opção de Busca Segura (Google Custom Search para o episódio)
-    const url3 = `https://www.google.com/search?q=assistir+${title.replace(/\s+/g, '+')}+ep+${num}+online`;
-
-    if(currentMode === 'anime') {
-        // Tenta carregar o Servidor 1 por padrão
-        player.src = url1;
+    function prepareVideo(num) {
+        const btn = document.getElementById('btnPlay');
+        const txt = document.getElementById('statusTxt');
         
-        if(errorBox) {
-            errorBox.style.display = "block";
-            errorBox.innerHTML = `
-                <div style="background: #1a1a1a; padding: 20px; border-radius: 10px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: center;">
-                    <p style="font-weight: bold; color: #fff; margin-bottom: 15px;">📡 CONTROLE DE SINAL (EPISÓDIO ${num})</p>
-                    
-                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                        <button onclick="document.getElementById('mainIframe').src='${url1}'" style="padding: 10px 20px; background: #333; border: 1px solid var(--primary); color: white; cursor: pointer; border-radius: 5px; font-weight: bold;">SERVIDOR 1</button>
-                        
-                        <button onclick="document.getElementById('mainIframe').src='${url2}'" style="padding: 10px 20px; background: #333; border: 1px solid var(--primary); color: white; cursor: pointer; border-radius: 5px; font-weight: bold;">SERVIDOR 2</button>
-                        
-                        <a href="${url1}" target="_blank" style="padding: 10px 20px; background: var(--primary); color: black; text-decoration: none; border-radius: 5px; font-weight: bold;">ABRIR NO PLAYER EXTERNO 🚀</a>
-                    </div>
-                    
-                    <p style="margin-top: 15px; font-size: 12px; color: #aaa;">Dica: Se o Player ficar preto, clique em "ABRIR NO PLAYER EXTERNO".</p>
-                </div>
-            `;
+        // LINK SEGURO (Embedder)
+        const videoUrl = `https://embedder.net/e/anime/${selectedItem.mal_id}/${num}`;
+        
+        if(currentMode === 'anime') {
+            btn.href = videoUrl;
+            btn.style.display = "inline-block";
+            txt.innerHTML = `Episódio <b style="color:var(--primary)">${num}</b> pronto!`;
+        } else {
+            window.open(`https://manganato.com/search/story/${selectedItem.title.replace(/\s+/g, '_')}`, '_blank');
         }
-    } else {
-        window.open(`https://manganato.com/search/story/${title.replace(/\s+/g, '_')}`, '_blank');
-    }
-}
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('mainPlayer').src = "";
     }
 
-    // BUSCA COM DEBOUNCE
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
     let timer;
     function debounceSearch() {
         clearTimeout(timer);
-        timer = setTimeout(() => {
-            const q = document.getElementById('searchInput').value;
-            loadCatalog(`https://api.jikan.moe/v4/${currentMode}?q=${q}&limit=24`);
-        }, 800);
+        timer = setTimeout(() => loadCatalog(document.getElementById('searchInput').value), 800);
     }
-
-    // CONFIGURAÇÃO DISQUS
-    (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://animepro-site.disqus.com/embed.js'; // Substitua pelo seu ID Disqus se desejar
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
 </script>
 </body>
 </html>
