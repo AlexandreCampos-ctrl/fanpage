@@ -156,84 +156,84 @@
     </div>
 </div>
 
+<div class="hero" id="mainHero">
+    <div class="hero-content">
+        <h2 id="featuredTitle">Carregando Destaque...</h2>
+        <p id="featuredDesc" style="max-width: 600px; font-size: 0.9rem; color: #ccc; margin-bottom: 15px;"></p>
+        <button onclick="openFeatured()" style="padding: 10px 30px; background: var(--accent); border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ASSISTIR AGORA</button>
+    </div>
+</div>
+
 <script>
     let currentMode = 'anime';
     let currentData = null;
+    let featuredAnime = null;
 
-    async function loadContent(url = 'https://api.jikan.moe/v4/top/anime?limit=24') {
-        const grid = document.getElementById('mainGrid');
-        grid.innerHTML = "<p>Sincronizando com o servidor...</p>";
-        
-        const resp = await fetch(url);
-        const data = await resp.json();
-        
-        grid.innerHTML = data.data.map(item => `
-            <div class="anime-card" onclick='openModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>
-                <div class="score-badge">★ ${item.score || 'N/A'}</div>
-                <img src="${item.images.jpg.large_image_url}" loading="lazy">
-                <div class="anime-meta">
-                    <h3>${item.title}</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-dim);">${item.type} • ${item.episodes || '?'} Eps</p>
-                </div>
-            </div>
-        `).join('');
+    // 1. ACERTO DO BANNER: Busca o topo do ranking para o destaque
+    async function setupHero() {
+        try {
+            const resp = await fetch('https://api.jikan.moe/v4/top/anime?limit=1');
+            const data = await resp.json();
+            featuredAnime = data.data[0];
+            
+            const hero = document.getElementById('mainHero');
+            const title = document.getElementById('featuredTitle');
+            const desc = document.getElementById('featuredDesc');
+            
+            hero.style.backgroundImage = `linear-gradient(to bottom, transparent, #050505), url('${featuredAnime.images.jpg.large_image_url}')`;
+            title.innerText = featuredAnime.title;
+            desc.innerText = featuredAnime.synopsis ? featuredAnime.synopsis.substring(0, 150) + "..." : "";
+        } catch (e) { console.error("Erro no Banner"); }
     }
 
-    function setMode(mode) {
-        currentMode = mode;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-        loadContent(`https://api.jikan.moe/v4/top/${mode}?limit=24`);
-    }
+    function openFeatured() { if(featuredAnime) openModal(featuredAnime); }
 
-    function filterGenre(id) {
-        loadContent(`https://api.jikan.moe/v4/${currentMode}?genres=${id}&order_by=popularity&limit=24`);
-    }
-
-    function openModal(item) {
-        currentData = item;
-        document.getElementById('modalName').innerText = item.title;
-        document.getElementById('playerModal').style.display = 'block';
-        
-        const list = document.getElementById('epList');
-        list.innerHTML = "";
-        const total = currentMode === 'anime' ? (item.episodes || 12) : (item.chapters || 40);
-
-        for(let i=1; i<=total; i++) {
-            list.innerHTML += `<div class="ep-box" onclick="play(${i})">${i}</div>`;
-        }
-    }
-
+    // 2. ACERTO DA API DE VÍDEO: Lógica para evitar "Refused to Connect"
     function play(num) {
+        const videoArea = document.getElementById('videoContainer');
+        const iframe = document.getElementById('videoIframe');
+        const lang = "legendado"; // Você pode conectar isso ao select de idioma
+        
+        // Estrutura de ID correta para o embedder
+        const id = currentData.mal_id;
+        
+        // Link dinâmico
+        const streamUrl = `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`;
+
         if(currentMode === 'anime') {
-            document.getElementById('videoContainer').style.display = 'block';
+            videoArea.style.display = 'block';
             document.getElementById('mangaContainer').style.display = 'none';
-            // Servidor de Alta Disponibilidade (Embedder)
-            document.getElementById('videoIframe').src = `https://embedder.net/e/anime/${currentData.mal_id}/${num}`;
+            
+            // Tentativa de carregar no player interno
+            iframe.src = streamUrl;
+
+            // Se der erro de conexão (comum em iframes), o usuário terá o link de backup
+            const list = document.getElementById('epList');
+            if(!document.getElementById('backupBtn')) {
+                const backup = document.createElement('a');
+                backup.id = 'backupBtn';
+                backup.className = 'filter-btn';
+                backup.style.display = 'block';
+                backup.style.textAlign = 'center';
+                backup.style.marginTop = '20px';
+                backup.style.background = '#444';
+                backup.innerText = "VÍDEO NÃO CARREGOU? CLIQUE AQUI (PLAYER EXTERNO)";
+                backup.target = "_blank";
+                list.parentNode.insertBefore(backup, list);
+            }
+            document.getElementById('backupBtn').href = streamUrl;
         } else {
-            document.getElementById('videoContainer').style.display = 'none';
-            document.getElementById('mangaContainer').style.display = 'block';
-            document.getElementById('mangaContainer').innerHTML = `
-                <h3 style="color: #000; padding: 20px;">Capítulo ${num}</h3>
-                <img src="https://via.placeholder.com/800x1200.png?text=Página+Simulada+do+Mangá+${num}">
-            `;
+            // Lógica de Mangá (Zen Reader)
+            videoArea.style.display = 'none';
+            const reader = document.getElementById('mangaContainer');
+            reader.style.display = 'block';
+            reader.innerHTML = `<h3>Capítulo ${num}</h3><img src="https://via.placeholder.com/800x1200.png?text=Lendo+Capitulo+${num}">`;
         }
     }
 
-    function closeModal() {
-        document.getElementById('playerModal').style.display = 'none';
-        document.getElementById('videoIframe').src = "";
-    }
-
-    function searchHandler() {
-        clearTimeout(window.st);
-        window.st = setTimeout(() => {
-            const q = document.getElementById('searchInput').value;
-            loadContent(`https://api.jikan.moe/v4/${currentMode}?q=${q}&limit=24`);
-        }, 800);
-    }
-
-    loadContent();
+    // Inicialização
+    setupHero();
+    loadContent(); // Função de carregar a grid que já tínhamos
 </script>
 </body>
 </html>
