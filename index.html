@@ -166,26 +166,29 @@
     function prepararPlay(num) {
     selectedEp = num;
     const lang = document.getElementById('langSelect').value;
-    const season = document.getElementById('seasonSelect').value;
     const id = currentItem.mal_id;
+    const title = currentItem.title;
     
-    // Lista de servidores para o usuário testar (Caso um dê erro)
-    const server1 = `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`;
-    const server2 = `https://www.animesonline.cc/search/${currentItem.title.replace(/\s+/g, '+')}`;
+    // Configuração de múltiplos servidores paliativos
+    const s1 = `https://embedder.net/e/anime/${id}${lang === 'dublado' ? '-dublado' : ''}/${num}`;
+    const s2 = `https://supervideo.tv/e/anime/${id}/${num}`; // Servidor Alternativo 1
+    const s3 = `https://www.google.com/search?q=assistir+${title.replace(/\s+/g, '+')}+episodio+${num}+${lang}`;
+
+    const btnArea = document.getElementById('epGrid');
     
-    const btn = document.getElementById('btnAssistir');
-    
-    // Se o servidor 1 der erro, o usuário tem o nome do anime para buscar no servidor 2
-    btn.href = server1; 
-    btn.style.display = 'block';
-    
-    // Adiciona uma dica visual
+    // Atualiza a área de ação com múltiplas opções de player
     document.getElementById('selectedEpText').innerHTML = `
-        <p>Episódio ${num} pronto!</p>
-        <p style="font-size:10px; color:orange;">Se o link principal falhar, tente buscar por: <b>${currentItem.title}</b></p>
+        <div style="background:#222; padding:15px; border-radius:10px; border:1px solid var(--primary);">
+            <p style="margin-bottom:10px;">Episódio ${num} selecionado!</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <a href="${s1}" target="_blank" class="btn-play" style="margin:0; background:#444;">TESTAR SERVIDOR 1 (Embedder)</a>
+                <a href="${s2}" target="_blank" class="btn-play" style="margin:0; background:#444;">TESTAR SERVIDOR 2 (SuperVideo)</a>
+                <a href="${s3}" target="_blank" class="btn-play" style="margin:0; background:var(--primary);">BUSCA EXTERNA (Google)</a>
+            </div>
+            <p style="font-size:11px; color:orange; margin-top:10px;">Nota: Se o Servidor 1 der "Web server is down", use as outras opções.</p>
+        </div>
     `;
 }
-
     function closeModal() { document.getElementById('mainModal').style.display = 'none'; }
 
     function debounceSearch() {
