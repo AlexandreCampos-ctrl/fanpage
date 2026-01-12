@@ -280,41 +280,46 @@
     // PLAYER DE MÍDIA (SOLUÇÃO FINAL)
     function playMedia(num) {
     const id = selectedItem.mal_id;
+    const title = selectedItem.title;
     const player = document.getElementById('mainIframe');
     const errorBox = document.getElementById('errorHandler');
-    const extLink = document.getElementById('externalLink');
 
-    // TESTAREMOS 2 SERVIDORES DIFERENTES
-    // Servidor A (Mais rápido)
-    const serverA = `https://embedder.net/e/anime/${id}/${num}`;
-    // Servidor B (Mais compatível)
-    const serverB = `https://s1.animesapi.com/embed/${id}/${num}`;
+    // 1. Opção via ID (Embedder)
+    const url1 = `https://embedder.net/e/anime/${id}/${num}`;
+    
+    // 2. Opção via Título (SuperVideo - mais estável para animes novos como Bleach)
+    const slug = title.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
+    const url2 = `https://supervideo.tv/e/anime/${slug}/${num}`;
+
+    // 3. Opção de Busca Segura (Google Custom Search para o episódio)
+    const url3 = `https://www.google.com/search?q=assistir+${title.replace(/\s+/g, '+')}+ep+${num}+online`;
 
     if(currentMode === 'anime') {
-        // Tenta o Servidor B primeiro que é mais estável para sites novos
-        player.src = serverB;
+        // Tenta carregar o Servidor 1 por padrão
+        player.src = url1;
         
         if(errorBox) {
             errorBox.style.display = "block";
             errorBox.innerHTML = `
-                <div style="background: #222; padding: 15px; border-radius: 10px; border: 1px solid var(--primary); margin-bottom:15px;">
-                    <p style="margin-bottom:10px; font-weight:bold;">OPÇÕES DE PLAYER:</p>
-                    <button onclick="document.getElementById('mainIframe').src='${serverA}'" style="padding:5px 10px; background:var(--primary); border:none; cursor:pointer; font-weight:bold; border-radius:3px;">SERVIDOR 1</button>
-                    <button onclick="document.getElementById('mainIframe').src='${serverB}'" style="padding:5px 10px; background:#444; color:white; border:none; cursor:pointer; font-weight:bold; border-radius:3px; margin-left:10px;">SERVIDOR 2</button>
-                    <hr style="margin:10px 0; border:0; border-top:1px solid #333;">
-                    <a href="${serverB}" target="_blank" style="color: var(--primary); font-size: 13px; text-decoration: underline;">
-                        ABRIR EM TELA CHEIA (CASO O PLAYER NÃO CARREGUE)
-                    </a>
+                <div style="background: #1a1a1a; padding: 20px; border-radius: 10px; border: 2px solid var(--primary); margin-bottom: 20px; text-align: center;">
+                    <p style="font-weight: bold; color: #fff; margin-bottom: 15px;">📡 CONTROLE DE SINAL (EPISÓDIO ${num})</p>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="document.getElementById('mainIframe').src='${url1}'" style="padding: 10px 20px; background: #333; border: 1px solid var(--primary); color: white; cursor: pointer; border-radius: 5px; font-weight: bold;">SERVIDOR 1</button>
+                        
+                        <button onclick="document.getElementById('mainIframe').src='${url2}'" style="padding: 10px 20px; background: #333; border: 1px solid var(--primary); color: white; cursor: pointer; border-radius: 5px; font-weight: bold;">SERVIDOR 2</button>
+                        
+                        <a href="${url1}" target="_blank" style="padding: 10px 20px; background: var(--primary); color: black; text-decoration: none; border-radius: 5px; font-weight: bold;">ABRIR NO PLAYER EXTERNO 🚀</a>
+                    </div>
+                    
+                    <p style="margin-top: 15px; font-size: 12px; color: #aaa;">Dica: Se o Player ficar preto, clique em "ABRIR NO PLAYER EXTERNO".</p>
                 </div>
             `;
         }
     } else {
-        // Link para Mangá
-        const mangaUrl = `https://manganato.com/search/story/${selectedItem.title.replace(/\s+/g, '_')}`;
-        window.open(mangaUrl, '_blank');
+        window.open(`https://manganato.com/search/story/${title.replace(/\s+/g, '_')}`, '_blank');
     }
 }
-
     function closeModal() {
         document.getElementById('modal').style.display = 'none';
         document.getElementById('mainPlayer').src = "";
